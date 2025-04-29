@@ -1,0 +1,105 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+*:focus {
+    outline: none;
+}
+
+.dialog {
+    @include row-by-row-display;
+    @include border;
+    padding: 75px 30px;
+    gap: 30px;
+    background-color: $block-background-color;
+
+    .text-block {
+        @include row-by-row-display;
+        background-color: inherit;
+    }
+
+    .title {
+        @include title-text;
+        text-transform: uppercase;
+        user-select: none;
+    }
+
+    .text {
+        @include text;
+        background-color: $block-background-color;
+        user-select: none;
+    }
+
+    .link {
+        background-color: $block-background-color;
+        cursor: pointer;
+    }
+}
+
+.form {
+    position: relative;
+    @include row-by-row-display;
+    gap: 30px;
+    background-color: inherit;
+    width: 100%;
+}
+
+.form-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    border-radius: 12px;
+    margin: 0 30px;
+    background-color: inherit;
+}
+
+.form-item input {
+    @include border;
+    @include text;
+    font-size: 1.25rem;
+    transition: all 0.3s ease;
+    padding: 18px 30px;
+    background-color: $white-color;
+    width: 270px;
+}
+
+.form-item input:focus {
+    border-color: $title-text-color;
+}
+
+.form-item label {
+    @include text;
+    position: absolute;
+    cursor: text;
+    z-index: 2;
+    top: 25%;
+    left: 30px;
+    font-size: 1.25rem;
+    background: $white-color;
+    color: $input-field-text-color;
+    transition: all 0.3s ease;
+    padding: 3px;
+}
+
+.form-item input:focus + label,
+.form-item input:valid + label {
+    font-size: 0.7rem;
+    top: 1px;
+}
+
+.form-item input:focus + label {
+    color: $title-text-color;
+}
+
+.button {
+    padding: 18px 30px;
+    width: 332px;
+    font-size: 1.25rem;
+    font-weight: 700;
+}
+
+.error {
+    @include text;
+    color: $error-text-color;
+    font-size: 0.75rem;
+}

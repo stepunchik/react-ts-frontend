@@ -1,0 +1,34 @@
+@import './variables.scss';
+
+@mixin title-text {
+    font-family: $title-text-font;
+    font-weight: 700;
+    color: $title-text-color;
+    background-color: inherit;
+}
+
+@mixin text {
+    font-family: $text-font;
+    font-weight: 400;
+    color: $text-color;
+    background-color: inherit;
+}
+
+@mixin border {
+    border: 1px solid $border-color;
+    border-radius: 12px;
+}
+
+@mixin row-by-row-display {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
+}
+
+@mixin primary-button {
+    @include title-text;
+    background-color: $primary-button-color;
+    color: $white-color;
+    @include border;
+}

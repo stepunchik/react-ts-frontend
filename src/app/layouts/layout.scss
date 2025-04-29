@@ -1,0 +1,17 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+* {
+    margin: 0;
+    padding: 0;
+    background-color: $background-color;
+}
+
+.button {
+    @include primary-button;
+}
+
+.button:hover {
+    background-color: $primary-button-hover-color;
+    cursor: pointer;
+}
