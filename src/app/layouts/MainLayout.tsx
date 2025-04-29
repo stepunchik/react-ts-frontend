@@ -1,15 +1,14 @@
 import { Outlet } from 'react-router-dom';
+import { Sidebar } from '../../widgets/sidebar';
+import { Header } from '../../widgets/header';
+
+import './layout.scss';
 
 export const MainLayout = () => {
     return (
         <div>
-            <header>
-                <nav>
-                    <a href="/">Feed</a>
-                    <a href="/profile">Profile</a>
-                    <a href="/sign-in">Sign In</a>
-                </nav>
-            </header>
+            <Header />
+            <Sidebar />
             <main>
                 <Outlet />
             </main>

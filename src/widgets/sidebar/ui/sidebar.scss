@@ -1,0 +1,24 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+.sidebar {
+    position: fixed;
+    width: 15.6dvw;
+    padding-left: 30px;
+    background-color: $block-background-color;
+    border-right: 1px solid $border-color;
+    height: 100dvh;
+    margin-top: 57px;
+
+    .sidebar-block {
+        padding: 14px 0;
+        background-color: inherit;
+    }
+
+    .link {
+        color: $title-text-color;
+        text-decoration: none;
+        background-color: inherit;
+        @include title-text;
+    }
+}
