@@ -1,21 +1,21 @@
-@import './variables.scss';
+@use 'variables.scss';
 
 @mixin title-text {
-    font-family: $title-text-font;
+    font-family: variables.$title-text-font;
     font-weight: 700;
-    color: $title-text-color;
+    color: variables.$title-text-color;
     background-color: inherit;
 }
 
 @mixin text {
-    font-family: $text-font;
+    font-family: variables.$text-font;
     font-weight: 400;
-    color: $text-color;
+    color: variables.$text-color;
     background-color: inherit;
 }
 
 @mixin border {
-    border: 1px solid $border-color;
+    border: 1px solid variables.$border-color;
     border-radius: 12px;
 }
 
@@ -28,7 +28,7 @@
 
 @mixin primary-button {
     @include title-text;
-    background-color: $primary-button-color;
-    color: $white-color;
+    background-color: variables.$primary-button-color;
+    color: variables.$white-color;
     @include border;
 }

@@ -4,6 +4,8 @@ import { LoginDialog } from '../../login-dialog';
 
 import './header.scss';
 
+ReactModal.setAppElement('#root');
+
 export const Header = () => {
     const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 

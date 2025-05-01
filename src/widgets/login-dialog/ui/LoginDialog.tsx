@@ -1,24 +1,33 @@
 import React, { useState } from 'react';
-import { registrationData } from '../model/registration-schema';
+import { loginSchema, signupSchema } from '../model/registration-schema';
 import { ZodError } from 'zod';
+import { login } from '/src/shared/api/endpoints/login';
+import { signup } from '/src/shared/api/endpoints/signup';
 
 import './login-dialog.scss';
 
-type FormErrors = Record<string, string>;
-
 export const LoginDialog = () => {
-    const [isSignUp, setIsSignUp] = useState(false);
-    const [errors, setErrors] = useState<FormErrors>({});
+	const [isSignUp, setIsSignUp] = useState(false);
+	const [errors, setErrors] = useState({});
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-        e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const data = Object.fromEntries(formData.entries());
+	const validationSchema = isSignUp ? signupSchema : loginSchema;
 
-        try {
-            registrationData.parse(data);
+	const [formData, setFormData] = useState({
+		email: '',
+		name: '',
+		password: '',
+		confirmPassword: ''
+	});
+
+	const handleChange = (event) => {
+		const { name, value } = event.target;
+		setFormData((prevState) => ({ ...prevState, [name]: value }));
+	};
+
+	function validateForm(data) {
+		try {
+            validationSchema.parse(data);
             setErrors({});
-            // TODO: отправить данные на сервер
         } catch (error) {
             if (error instanceof ZodError) {
                 const newErrors: FormErrors = {};
@@ -30,69 +39,82 @@ export const LoginDialog = () => {
                 setErrors(newErrors);
             }
         }
-    };
+	}
 
-    const toggleForm = () => {
-        setErrors({});
-        setIsSignUp((prev) => !prev);
-    };
+	const handleSubmit = (event) => {
+		event.preventDefault();
+		validateForm(formData);
 
-    return (
-        <div className="dialog">
-            <div className="text-block">
-                <h2 className="title">{isSignUp ? 'Регистрация' : 'Вход'}</h2>
-                {!isSignUp && <p className="text">Войдите в свой аккаунт.</p>}
-            </div>
+		if (isSignUp) {
+			signup(formData);
+		}
+		else {
+			login(formData);
+		}
+		
+  	};
 
-            <form onSubmit={handleSubmit} className="form">
-                <div className='form-item'>
-                    <input id="email" name="email" required />
-                    <label htmlFor="email">Введите email</label>
-                    {errors.email && <p className="error">{errors.email}</p>}
-                </div>
+	const toggleForm = () => {
+		setErrors({});
+		setIsSignUp((prev) => !prev);
+	};
 
-                {isSignUp && (
-                    <div className='form-item'>
-                        <input id="name" name="text" required />
-                        <label htmlFor="name">Введите имя</label>
-                        {errors.email && <p className="error">{errors.name}</p>}
-                    </div>
-                )}
+	return (
+		<div className="dialog">
+			<div className="text-block">
+				<h2 className="title">{isSignUp ? 'Регистрация' : 'Вход'}</h2>
+				{!isSignUp && <p className="text">Войдите в свой аккаунт.</p>}
+			</div>
 
-                <div className='form-item'>
-                    <input id="password" name="password" type="password" required />
-                    <label htmlFor="password">Введите пароль</label>
-                    {errors.password && <p className="error">{errors.password}</p>}
-                </div>
+			<form onSubmit={handleSubmit} className="form">
+				<div className='form-item'>
+					<input id="email" name="email" value={formData.email} onChange={handleChange} required />
+					<label htmlFor="email">Введите email</label>
+					{errors.email && <p className="error">{errors.email}</p>}
+				</div>
 
-                {isSignUp && (
-                    <div className='form-item'>
-                        <input id="confirmPassword" name="confirmPassword" type="password" required />
-                        <label htmlFor="confirmPassword">Подтвердите пароль</label>
-                        {errors.confirmPassword && (
-                            <p className="error">{errors.confirmPassword}</p>
-                        )}
-                    </div>
-                )}
-                <div className='form-item'>
+				{isSignUp && (
+					<div className='form-item'>
+						<input id="name" name="name" value={formData.name} onChange={handleChange} required />
+						<label htmlFor="name">Введите имя</label>
+						{errors.email && <p className="error">{errors.name}</p>}
+					</div>
+				)}
 
-                <button type="submit" className="button">
-                    {isSignUp ? 'Зарегистрироваться' : 'Войти'}
-                </button>
-                </div>
+				<div className='form-item'>
+					<input id="password" name="password" type="password" value={formData.password} onChange={handleChange} required />
+					<label htmlFor="password">Введите пароль</label>
+					{errors.password && <p className="error">{errors.password}</p>}
+				</div>
 
-                <p>
-                    {isSignUp ? (
-                        <p className="text">
-                            Уже есть аккаунт? <a onClick={toggleForm} className="link"> Войдите</a>.
-                        </p>
-                    ) : (
-                        <p className="text">
-                            Еще нет аккаунта? <a onClick={toggleForm} className="link"> Зарегистрируйтесь</a>.
-                        </p>
-                    )}
-                </p>
-            </form>
-        </div>
-    );
+				{isSignUp && (
+					<div className='form-item'>
+						<input id="confirmPassword" name="confirmPassword" type="password" value={formData.confirmPassword} onChange={handleChange} required />
+						<label htmlFor="confirmPassword">Подтвердите пароль</label>
+						{errors.confirmPassword && (
+							<p className="error">{errors.confirmPassword}</p>
+						)}
+					</div>
+				)}
+				<div className='form-item'>
+
+				<button type="submit" className="button">
+					{isSignUp ? 'Зарегистрироваться' : 'Войти'}
+				</button>
+				</div>
+
+				<div>
+					{isSignUp ? (
+						<p className="text">
+							Уже есть аккаунт? <a onClick={toggleForm} className="link"> Войдите</a>.
+						</p>
+					) : (
+						<p className="text">
+							Еще нет аккаунта? <a onClick={toggleForm} className="link"> Зарегистрируйтесь</a>.
+						</p>
+					)}
+				</div>
+			</form>
+		</div>
+	);
 };
