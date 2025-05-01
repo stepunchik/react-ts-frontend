@@ -1,13 +1,20 @@
-import { z } from 'zod';
+// validationSchemas.ts
+import { z } from "zod";
 
-export const registrationData = z
-    .object({
-        email: z.string().email({ message: 'Неверный формат электронной почты!' }),
-        name: z.string().min(2, { message: 'Имя должно содержать хотя бы 2 символа' }),
-        password: z.string().min(6, { message: 'Пароль должен содержать хотя бы 6 символов!' }),
-        confirmPassword: z.string(),
-    })
-    .refine((data) => data.password === data.confirmPassword, {
-        message: 'Пароли не совпадают',
-        path: ['confirmPassword'],
-    });
+const email = z.string().email("Введите корректный email");
+const password = z.string().min(6, "Пароль должен быть не менее 6 символов");
+
+export const loginSchema = z.object({
+    email,
+    password,
+});
+
+export const signupSchema = z.object({
+    name: z.string().min(2, "Имя обязательно"),
+    email,
+    password,
+    confirmPassword: z.string(),
+}).refine((data) => data.password === data.confirmPassword, {
+    path: ["confirmPassword"],
+    message: "Пароли не совпадают",
+});
