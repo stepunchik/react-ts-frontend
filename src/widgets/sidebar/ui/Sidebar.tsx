@@ -1,7 +1,11 @@
 import { Link } from 'react-router-dom';
 import './sidebar.scss';
 
-export const Sidebar = () => {
+interface SidebarProps {
+    isGuestLayout: boolean
+}
+
+export const Sidebar: React.FC<SidebarProps> = ({ isGuestLayout }) => {
     return (
         <nav className="sidebar">
             <div className="sidebar-block">
@@ -9,16 +13,20 @@ export const Sidebar = () => {
                     Главная
                 </Link>
             </div>
-            <div className="sidebar-block">
-                <Link to="/conversations" className="link">
-                    Диалоги
-                </Link>
-            </div>
-            <div className="sidebar-block">
-                <Link to="/profile" className="link">
-                    Профиль
-                </Link>
-            </div>
+            { !isGuestLayout &&
+                <div className="sidebar-block">
+                    <Link to="/conversations" className="link">
+                        Диалоги
+                    </Link>
+                </div>
+            }
+            { !isGuestLayout &&
+                <div className="sidebar-block">
+                    <Link to="/profile" className="link">
+                        Профиль
+                    </Link>
+                </div>
+            }
         </nav>
     );
 };

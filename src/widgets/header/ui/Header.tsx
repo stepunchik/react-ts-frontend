@@ -6,7 +6,11 @@ import './header.scss';
 
 ReactModal.setAppElement('#root');
 
-export const Header = () => {
+interface HeaderProps {
+    isGuestLayout: boolean
+}
+
+export const Header: React.FC<HeaderProps> = ({ isGuestLayout }) => {
     const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
     const openLoginDialog = () => setIsLoginDialogOpen(true);
@@ -15,9 +19,11 @@ export const Header = () => {
     return (
         <header className="header">
             <input type="text" className="search-field" />
-            <button onClick={openLoginDialog} className="header-button">
-                Войти
-            </button>
+            { isGuestLayout &&
+                <button onClick={openLoginDialog} className="header-button">
+                    Войти
+                </button>
+            }
             <ReactModal
                 isOpen={isLoginDialogOpen}
                 onRequestClose={closeLoginDialog}
