@@ -1,16 +1,17 @@
 import { useState } from 'react';
 import ReactModal from 'react-modal';
 import { LoginDialog } from '../../login-dialog';
+import { Search } from '/src/features/search/ui/Search';
 
 import './header.scss';
 
 ReactModal.setAppElement('#root');
 
 interface HeaderProps {
-    isGuestLayout: boolean
+    isAuthenticated: boolean
 }
 
-export const Header: React.FC<HeaderProps> = ({ isGuestLayout }) => {
+export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
     const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
     const openLoginDialog = () => setIsLoginDialogOpen(true);
@@ -18,8 +19,8 @@ export const Header: React.FC<HeaderProps> = ({ isGuestLayout }) => {
 
     return (
         <header className="header">
-            <input type="text" className="search-field" />
-            { isGuestLayout &&
+            <Search />
+            { !isAuthenticated &&
                 <button onClick={openLoginDialog} className="header-button">
                     Войти
                 </button>
@@ -28,7 +29,7 @@ export const Header: React.FC<HeaderProps> = ({ isGuestLayout }) => {
                 isOpen={isLoginDialogOpen}
                 onRequestClose={closeLoginDialog}
                 className="modal">
-                <LoginDialog />
+                <LoginDialog onClose={closeLoginDialog}/>
             </ReactModal>
         </header>
     );

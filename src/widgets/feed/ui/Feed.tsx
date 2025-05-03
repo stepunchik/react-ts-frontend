@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { feed } from '/src/shared/api/endpoints/feed';
 
 import './feed.scss';
@@ -16,7 +16,7 @@ export const Feed = () => {
         feed()
         .then(({ data }) => {
             setIsLoading(false);
-            setPublications(data.data);
+            setPublications(data.publications);
         })
         .catch(() => {
             setIsLoading(false);
@@ -25,22 +25,27 @@ export const Feed = () => {
     
     return (
         <div className="feed">
+            { publications.length == 0 && !isLoading ?
+                <div>Публикаций нет.</div>
+                : null
+            }
             {isLoading &&
                 <div>Loading...</div>
             }
             {!isLoading &&
                 publications.map((publication) => (
-                    <div className="publication-block">
+                    <div key={publication.id} className="publication-block">
                         <div>
-                            
+                            {publication.title}
                         </div>
                         <p>
-                            
+                            {publication.text}
                         </p>
-                        <img src=""/>
+                        <img src={publication.image} alt={publication.title}/>
                     </div>
                 ))
             }
         </div>
     );
+
 };

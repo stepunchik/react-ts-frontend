@@ -1,4 +1,6 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import { useEffect } from 'react';
+import { Outlet } from 'react-router-dom';
+import { GuestLayout } from './GuestLayout';
 import { Sidebar } from '../../widgets/sidebar';
 import { Header } from '../../widgets/header';
 import { useStateContext } from '../providers/ContextProvider';
@@ -8,23 +10,23 @@ import './layout.scss';
 
 export const MainLayout = () => {
 	const { user, token, setUser, setToken } = useStateContext();
+	console.log(token);
+	// useEffect(() => {
+	// 	currentUser()
+	// 	.then(({data}) => {
+	// 		setUser(data)
+	// 	})
+	// }, [])
 
 	if (!token) {
-		return <Navigate to="/"/>
+		return <GuestLayout />
 	}
-
-	useEffect(() => {
-		currentUser()
-		.then(({data}) => {
-			setUser(data)
-		})
-	}, [])
 
 	return (
 		<div>
-			<Header isGuestLayout={false}/>
-			<Sidebar isGuestLayout={false}/>
-			<main>
+			<Header isAuthenticated={true}/>
+			<Sidebar isAuthenticated={true}/>
+			<main className="main">
 				<Outlet />
 			</main>
 		</div>

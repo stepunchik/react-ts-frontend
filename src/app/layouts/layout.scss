@@ -5,6 +5,7 @@
     margin: 0;
     padding: 0;
     background-color: $background-color;
+    @include text
 }
 
 .button {
@@ -14,4 +15,10 @@
 .button:hover {
     background-color: $primary-button-hover-color;
     cursor: pointer;
+}
+
+.main {
+    width: 60dvw;
+    margin: auto;
+    margin-top: 57px;
 }
