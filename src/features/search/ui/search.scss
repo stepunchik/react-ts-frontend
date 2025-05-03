@@ -1,0 +1,10 @@
+@import '/src/app/styles/mixins.scss';
+@import '/src/app/styles/variables.scss';
+
+.search-field {
+    @include border;
+    background-color: $white-color;
+    padding: 8px 10px;
+    width: 39dvw;
+    margin: 8px 0;
+}

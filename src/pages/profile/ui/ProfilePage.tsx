@@ -1,3 +1,9 @@
+import { LogoutButton } from '/src/features/auth';
+
 export const ProfilePage = () => {
-    return <></>;
+    return (
+        <div>
+            <LogoutButton />
+        </div>
+    );
 };

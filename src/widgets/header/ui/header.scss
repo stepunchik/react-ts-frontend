@@ -10,13 +10,8 @@
     display: flex;
     align-items: center;
     justify-content: center;
-}
-
-.search-field {
-    @include border;
-    padding: 8px 10px;
-    width: 39dvw;
-    margin: 8px 0;
+    top: 0;
+    left: 0;
 }
 
 .modal {
