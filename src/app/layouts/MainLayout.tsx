@@ -4,31 +4,32 @@ import { GuestLayout } from './GuestLayout';
 import { Sidebar } from '../../widgets/sidebar';
 import { Header } from '../../widgets/header';
 import { useStateContext } from '../providers/ContextProvider';
-import { currentUser } from '/src/shared/api/endpoints/currentUser';
 
 import './layout.scss';
+import { currentUser } from '../../shared/api/endpoints/users';
 
 export const MainLayout = () => {
-	const { user, token, setUser, setToken } = useStateContext();
-	console.log(token);
-	// useEffect(() => {
-	// 	currentUser()
-	// 	.then(({data}) => {
-	// 		setUser(data)
-	// 	})
-	// }, [])
+    const { user, token, setUser } = useStateContext();
 
-	if (!token) {
-		return <GuestLayout />
-	}
+    useEffect(() => {
+        if (token) {
+            currentUser().then((data: any) => {
+                setUser(data.data);
+            });
+        }
+    }, []);
 
-	return (
-		<div>
-			<Header isAuthenticated={true}/>
-			<Sidebar isAuthenticated={true}/>
-			<main className="main">
-				<Outlet />
-			</main>
-		</div>
-	);
+    if (!token) {
+        return <GuestLayout />;
+    }
+
+    return (
+        <div>
+            <Header isAuthenticated={true} />
+            <Sidebar isAuthenticated={true} currentUser={user} />
+            <main className="main">
+                <Outlet />
+            </main>
+        </div>
+    );
 };

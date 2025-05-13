@@ -1,7 +1,5 @@
 import React, { useState } from 'react';
-import { ZodError } from 'zod';
-import { useStateContext } from '/src/app/providers/ContextProvider';
-import { LoginForm, SignupForm } from '/src/features/auth';
+import { LoginForm, SignupForm } from '../../../features/auth';
 
 import './login-dialog.scss';
 
@@ -10,8 +8,6 @@ interface LoginDialogProps {
 }
 
 export const LoginDialog: React.FC<LoginDialogProps> = ({ onClose }) => {
-	const { setUser, setToken } = useStateContext();
-
 	const [isSignup, setIsSignup] = useState(false);
 
 	const toggleForm = () => {

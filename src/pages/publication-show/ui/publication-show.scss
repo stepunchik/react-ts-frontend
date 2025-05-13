@@ -1,0 +1,48 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+.publication-show-block {
+    position: relative;
+    @include row-by-row-display;
+    gap: 5px;
+    max-width: 36.4dvw;
+    align-self: flex-start;
+    @include border;
+    padding: 20px;
+    margin: auto;
+    margin-top: 30px;
+    margin-left: 260px;
+    align-items: start;
+    background-color: $post-background-color;
+}
+
+.user-info-block {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.back-button {
+    position: absolute;
+    left: -2.5rem;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    background-color: $primary-button-color;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.back-button:hover {
+    cursor: pointer;
+    background-color: $primary-button-hover-color;
+}
+
+.icon {
+    border-radius: 50%;
+}
+
+.show-text {
+    @include text;
+}

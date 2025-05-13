@@ -5,7 +5,6 @@
     margin: 0;
     padding: 0;
     background-color: $background-color;
-    @include text
 }
 
 .button {
@@ -18,7 +17,8 @@
 }
 
 .main {
-    width: 60dvw;
-    margin: auto;
-    margin-top: 57px;
+    margin-left: calc(15.6dvw + 30px);
+    padding-top: 57px;
+    min-height: calc(100dvh - 57px);
+    display: flex;
 }

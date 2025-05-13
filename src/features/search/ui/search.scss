@@ -5,6 +5,9 @@
     @include border;
     background-color: $white-color;
     padding: 8px 10px;
-    width: 39dvw;
+    max-width: 718px;
+    width: 100%;
+    margin: auto;
     margin: 8px 0;
+    height: 24px;
 }

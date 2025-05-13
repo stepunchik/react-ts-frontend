@@ -1,11 +1,12 @@
 import { createBrowserRouter } from 'react-router-dom';
 import { FeedPage } from '../../pages/feed';
 import { ProfilePage } from '../../pages/profile';
-import { ArticleEditPage } from '../../pages/article-edit';
-import { ArticleReadPage } from '../../pages/article-read';
+import { PublicationEditPage } from '../../pages/publication-edit';
 import { MainLayout } from '../layouts/MainLayout';
 import { NotFoundPage } from '../../pages/not-found';
 import { ConversationsPage } from '../../pages/conversations';
+import { PublicationShowPage } from '../../pages/publication-show';
+import { PublicationCreatePage } from '../../pages/publication-create';
 
 export const router = createBrowserRouter([
     {
@@ -21,16 +22,20 @@ export const router = createBrowserRouter([
                 element: <ConversationsPage />,
             },
             {
-                path: '/profile',
+                path: '/users/:id',
                 element: <ProfilePage />,
             },
             {
-                path: '/article/edit/:id',
-                element: <ArticleEditPage />,
+                path: '/publications/create',
+                element: <PublicationCreatePage />,
             },
             {
-                path: '/article/:id',
-                element: <ArticleReadPage />,
+                path: '/publications/edit/:id',
+                element: <PublicationEditPage />,
+            },
+            {
+                path: '/publications/:id',
+                element: <PublicationShowPage />,
             },
         ],
     },

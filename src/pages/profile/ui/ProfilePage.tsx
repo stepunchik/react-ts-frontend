@@ -1,9 +1,11 @@
-import { LogoutButton } from '/src/features/auth';
+import { useParams } from 'react-router-dom';
+import { Profile } from '../../../widgets/profile';
 
 export const ProfilePage = () => {
+    const { id } = useParams();
     return (
         <div>
-            <LogoutButton />
+            <Profile userId={Number(id)} />
         </div>
     );
 };
