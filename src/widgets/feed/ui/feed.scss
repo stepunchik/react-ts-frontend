@@ -1,0 +1,79 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+.feed {
+    @include row-by-row-display;
+    gap: 20px;
+    width: 38.5dvw;
+    margin: auto;
+    margin-bottom: 30px;
+    z-index: 0;
+}
+
+.publication-block {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    @include border;
+    background-color: $post-background-color;
+    padding: 10px 20px;
+}
+
+.publication-block:hover {
+    background-color: $post-hover-background-color;
+    cursor: pointer;
+}
+
+.title {
+    @include title-text;
+    z-index: 2;
+}
+
+.text {
+    @include text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2; /* number of lines to show */
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    background-color: inherit;
+    z-index: 2;
+}
+
+.image {
+    border-radius: 12px;
+    width: 100%;
+    height: 365px;
+    object-fit: cover;
+}
+
+.buttons-block {
+    display: flex;
+    flex-direction: row;
+    gap: 32px;
+    background-color: inherit;
+}
+
+.icon-button {
+    color: #000000;
+    background-color: inherit;
+    width: 24px;
+    height: 24px;
+    z-index: 2;
+}
+
+.icon-button:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: 0.5ms;
+}
+
+.selected {
+    color: $primary-button-color;
+}
+
+.loading {
+    background-color: inherit;
+}

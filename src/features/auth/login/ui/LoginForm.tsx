@@ -1,29 +1,34 @@
 import { useState } from 'react';
-import { useStateContext } from '/src/app/providers/ContextProvider';
-import { loginSchema } from '../model/loginSchema'
-import { login } from '/src/shared/api/endpoints/login';
+import { loginSchema } from '../model/loginSchema';
+import { useStateContext } from '../../../../app/providers/ContextProvider';
+import { login } from '../../../../shared/api';
+import { ZodError } from 'zod';
+import { AxiosError } from 'axios';
 
 interface LoginFormProps {
-	onClose: () => void;
+    onClose: () => void;
 }
 
+type FormErrors = Record<string, string>;
+
 export const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
-	const { setUser, setToken } = useStateContext();
+    const { setUser, setToken } = useStateContext();
 
-	const [errors, setErrors] = useState({});
+    const [errors, setErrors] = useState<FormErrors>({});
+    const [loginError, setLoginError] = useState('');
 
-	const [formData, setFormData] = useState({
-		email: '',
-		password: '',
-	});
+    const [formData, setFormData] = useState({
+        email: '',
+        password: '',
+    });
 
-	const handleChange = (event) => {
-		const { name, value } = event.target;
-		setFormData((prevState) => ({ ...prevState, [name]: value }));
-	};
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+        const { name, value } = event.target;
+        setFormData((prevState) => ({ ...prevState, [name]: value }));
+    };
 
-	function validateForm(data) {
-		try {
+    function validateForm(data: any): boolean {
+        try {
             loginSchema.parse(data);
             setErrors({});
         } catch (error) {
@@ -35,44 +40,69 @@ export const LoginForm: React.FC<LoginFormProps> = ({ onClose }) => {
                     }
                 });
                 setErrors(newErrors);
+                return false;
             }
         }
-	}
+        return true;
+    }
 
-	const handleSubmit = async (event) => {
-		event.preventDefault();
-		validateForm(formData);
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        if (!validateForm(formData)) {
+            return;
+        }
 
-		try {
-			const { data } = await login(formData)
-			setUser(data.user)
-			setToken(data.token);
-			
-			onClose();
-		} catch (error) {
-			console.error(error);
-		}
-  	};
+        try {
+            const response = await login(formData);
+            const data = response.data;
 
-	return (
-		<form onSubmit={handleSubmit} className="form">
-			<div className='form-item'>
-				<input id="email" name="email" value={formData.email} onChange={handleChange} required />
-				<label htmlFor="email">Введите email</label>
-				{errors.email && <p className="error">{errors.email}</p>}
-			</div>
+            setUser(data.user);
+            setToken(data.token);
 
-			<div className='form-item'>
-				<input id="password" name="password" type="password" value={formData.password} onChange={handleChange} required />
-				<label htmlFor="password">Введите пароль</label>
-				{errors.password && <p className="error">{errors.password}</p>}
-			</div>
+            onClose();
+        } catch (error) {
+            console.error(error);
 
-			<div className='form-item'>
-				<button type="submit" className="button">
-					Войти
-				</button>
-			</div>
-		</form>
-	);
-}
+            const err = error as AxiosError<{ message: string }>;
+            if (err.response?.data?.message) {
+                setLoginError(err.response.data.message);
+            }
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit} className="form">
+            <div className="form-item">
+                <input
+                    id="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleChange}
+                    required
+                />
+                <label htmlFor="email">Введите email</label>
+                {errors.email && <p className="error">{errors.email}</p>}
+            </div>
+
+            <div className="form-item">
+                <input
+                    id="password"
+                    name="password"
+                    type="password"
+                    value={formData.password}
+                    onChange={handleChange}
+                    required
+                />
+                <label htmlFor="password">Введите пароль</label>
+                {errors.password && <p className="error">{errors.password}</p>}
+                {loginError && <p className="error">{loginError}</p>}
+            </div>
+
+            <div className="form-item">
+                <button type="submit" className="button">
+                    Войти
+                </button>
+            </div>
+        </form>
+    );
+};
