@@ -5,22 +5,14 @@ export function publications() {
     return token ? GET('/publications') : GET('/publications/guest');
 }
 
-export function createPublication({
-    title,
-    text,
-    image,
-}: {
-    title: string;
-    text: string;
-    image: string;
-}) {
-    return POST('/publications', { title, text, image });
+export function createPublication(data: FormData) {
+    return POST('/publications', data);
 }
 
 export function userPublications(userId: number) {
     return GET(`/publications/${userId}`);
 }
 
-export function showPublication(publicationId: number) {
+export function showPublication(publicationId: string) {
     return GET(`/publications/${publicationId}`);
 }

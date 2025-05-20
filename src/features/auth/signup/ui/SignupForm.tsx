@@ -3,7 +3,7 @@ import { signupSchema } from '../model/signupSchema';
 import { useStateContext } from '../../../../app/providers/ContextProvider';
 import { ZodError } from 'zod';
 import { signup } from '../../../../shared/api/endpoints/signup';
-import { login } from '../../../../shared/api';
+import { login } from '../../../../shared/api/endpoints/login';
 
 interface SignupFormProps {
     onClose: () => void;
@@ -23,7 +23,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onClose }) => {
         confirmPassword: '',
     });
 
-    const handleChange = (event: { target: { name: any; value: any } }) => {
+    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
         setFormData((prevState) => ({ ...prevState, [name]: value }));
     };
@@ -47,7 +47,7 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onClose }) => {
         }
     }
 
-    const handleSubmit = async (event: { preventDefault: () => void }) => {
+    const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         if (!validateForm(formData)) {
             return;

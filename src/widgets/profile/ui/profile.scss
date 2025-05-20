@@ -86,12 +86,16 @@
     background-color: inherit;
 }
 
-.logout-button {
+.secondary-button {
     @include secondary-button;
     padding: 10px;
 }
 
-.logout-button:hover {
+.secondary-button:hover {
     background-color: $secondary-button-hover-color;
     cursor: pointer;
+}
+
+.posts-block {
+    z-index: 0;
 }

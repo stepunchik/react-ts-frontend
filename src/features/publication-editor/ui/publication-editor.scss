@@ -1,9 +1,33 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
 .publication-editor {
-    width: 38.5dvw;
-    margin-left: 260px;
-    margin-top: 30px;
+    width: 100%;
 }
 
-.ql-formats {
-    display: none;
+.custom-editor {
+    .ql-formats {
+        display: none;
+    }
+
+    .ql-container {
+        min-height: 200px;
+        font-family: $text-font;
+        font-size: 1rem;
+        background-color: white;
+
+        p {
+            background-color: white;
+        }
+    }
+
+    .ql-editor {
+        padding: 10px;
+        background-color: white;
+    }
+
+    .ql-editor.ql-blank::before {
+        color: white;
+        font-style: italic;
+    }
 }
