@@ -5,7 +5,9 @@
     position: relative;
     @include row-by-row-display;
     gap: 5px;
-    max-width: 36.4dvw;
+    max-width: 38.5dvw;
+    width: 100%;
+    box-sizing: border-box;
     align-self: flex-start;
     @include border;
     padding: 20px;
@@ -39,7 +41,10 @@
     background-color: $primary-button-hover-color;
 }
 
-.icon {
+.back-icon {
+    background-color: inherit;
+    width: 24px;
+    height: 24px;
     border-radius: 50%;
 }
 

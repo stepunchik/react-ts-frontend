@@ -45,7 +45,7 @@ export const TopUsers = () => {
                             <Link className="username top-username" to={`/users/${user.id}`}>
                                 {user.name}
                             </Link>
-                            <div className="user-rating">{user.rating * 1000}</div>
+                            <div className="user-rating">👍 {Math.round(user.rating * 100)}%</div>
                         </div>
                     ))}
             </div>
@@ -62,7 +62,7 @@ export const TopUsers = () => {
                             <Link className="username top-username" to={`/users/${user.id}`}>
                                 {user.name}
                             </Link>
-                            <div className="user-rating">{user.rating * 1000}</div>
+                            <div className="user-rating">👍 {Math.round(user.rating * 100)}%</div>
                         </div>
                     ))}
             </div>

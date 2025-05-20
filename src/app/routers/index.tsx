@@ -7,6 +7,7 @@ import { NotFoundPage } from '../../pages/not-found';
 import { ConversationsPage } from '../../pages/conversations';
 import { PublicationShowPage } from '../../pages/publication-show';
 import { PublicationCreatePage } from '../../pages/publication-create';
+import { ConversationsShowPage } from '../../pages/conversations-show';
 
 export const router = createBrowserRouter([
     {
@@ -20,6 +21,10 @@ export const router = createBrowserRouter([
             {
                 path: '/conversations',
                 element: <ConversationsPage />,
+            },
+            {
+                path: '/conversations/:id',
+                element: <ConversationsShowPage />,
             },
             {
                 path: '/users/:id',

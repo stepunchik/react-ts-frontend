@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { loginSchema } from '../model/loginSchema';
 import { useStateContext } from '../../../../app/providers/ContextProvider';
-import { login } from '../../../../shared/api';
 import { ZodError } from 'zod';
 import { AxiosError } from 'axios';
+import { login } from '../../../../shared/api/endpoints/login';
 
 interface LoginFormProps {
     onClose: () => void;

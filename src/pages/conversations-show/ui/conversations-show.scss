@@ -1,0 +1,107 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+.conversation-container {
+    @include column-display;
+    margin-left: 260px;
+    margin-top: 30px;
+    width: 38.5dvw;
+    height: 87dvh;
+    padding: 20px;
+    background-color: $block-background-color;
+    box-sizing: border-box;
+    border-radius: 16px;
+    @include shadow;
+    flex-direction: column; // вертикально
+    justify-content: space-between; // "расталкивает" блоки: сообщения + форму
+}
+
+.messages-box {
+    flex: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    padding-bottom: 10px;
+    background-color: inherit;
+}
+
+.message {
+    max-width: 50%;
+    padding: 10px 15px;
+    margin: 5px 12px;
+    border-radius: 20px;
+    @include text;
+    @include shadow;
+    background-color: $post-background-color;
+    align-self: flex-start;
+
+    &.own {
+        background-color: $message-background-color;
+        color: $white-color;
+        align-self: flex-end;
+    }
+}
+
+.text {
+    word-break: break-word;
+    white-space: pre-wrap;
+    overflow: visible;
+    text-overflow: unset;
+    display: block;
+    margin: 0;
+}
+
+.send-message-form {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 10px;
+    background-color: $block-background-color;
+
+    input {
+        flex: 1;
+        padding: 10px 15px;
+        font-size: 16px;
+        border: 1px solid $border-color;
+        border-radius: 20px;
+        outline: none;
+        font-family: $text-font;
+        color: $input-field-text-color;
+        background-color: $white-color;
+    }
+
+    button {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 20px;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        @include primary-button;
+
+        &:hover {
+            background-color: $primary-button-hover-color;
+        }
+    }
+}
+
+.created-at {
+    background-color: inherit;
+    color: $text-color;
+    font-size: 0.6rem;
+}
+
+.no-info {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: $text-color;
+    font-size: 1rem;
+    text-align: center;
+}
+
+.conversation-title {
+    @include border;
+    padding: 20px;
+    margin-bottom: 20px;
+}

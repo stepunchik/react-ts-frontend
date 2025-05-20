@@ -8,6 +8,8 @@ import { Feed } from '../../feed';
 import './profile.scss';
 import { useStateContext } from '../../../app/providers/ContextProvider';
 import { getUser } from '../../../shared/api/endpoints/users';
+import { CreateConversationButton } from '../../../features/conversation/conversation-button';
+import { Statistic } from '../../statistic';
 
 interface ProfileProps {
     userId: number;
@@ -33,7 +35,14 @@ export const Profile: React.FC<ProfileProps> = ({ userId }) => {
                 <img className="profile-image" src={user.image} alt={user.name} />
                 <h1 className="username">{user.name}</h1>
                 <div className="profile-button-block">
-                    {isOwnProfile && <LogoutButton style="logout-button" />}
+                    {isOwnProfile && <LogoutButton style="secondary-button" />}
+                    {!isOwnProfile && (
+                        <CreateConversationButton
+                            name={user.name}
+                            second_user={user.id}
+                            _className="secondary-button"
+                        />
+                    )}
                 </div>
             </div>
             <div className="profile-info">
@@ -63,11 +72,7 @@ export const Profile: React.FC<ProfileProps> = ({ userId }) => {
                 <div className="posts-block">
                     <Feed userProfileId={user.id} />
                 </div>
-                <div className="profile-block">
-                    <div className="profile-block-text">🏆 Рейтинг: </div>
-                    <div className="profile-block-text">👍 Лайки: </div>
-                    <div className="profile-block-text">📢 Публикации: </div>
-                </div>
+                <Statistic userId={user.id} />
             </div>
         </div>
     );

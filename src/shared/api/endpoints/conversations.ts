@@ -1,17 +1,17 @@
 import { GET, POST, DELETE } from '../client';
 
-export function conversations() {
+export function getConversations() {
     return GET('/conversations');
 }
 
-export function createConversation({ name, secondUserId }: { name: string; secondUserId: number }) {
-    return POST('/conversations', { name, secondUserId });
+export function createConversation(name: string, second_user: number) {
+    return POST('/conversations', { name, second_user });
 }
 
 export function deleteConversation(conversationId: number) {
     return DELETE(`/conversations/${conversationId}`);
 }
 
-export function getConversationMessages(conversationId: number) {
+export function getConversation(conversationId: string) {
     return GET(`/conversations/${conversationId}`);
 }

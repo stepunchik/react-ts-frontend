@@ -33,6 +33,11 @@
     align-items: center;
 }
 
+@mixin column-display {
+    display: flex;
+    flex-direction: column;
+}
+
 @mixin primary-button {
     @include title-text;
     background-color: variables.$primary-button-color;

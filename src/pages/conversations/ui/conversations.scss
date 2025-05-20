@@ -1,0 +1,28 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+.conversations-list {
+    margin: auto;
+    margin-left: 260px;
+    margin-top: 30px;
+    width: 38.5dvw;
+    box-sizing: border-box;
+    @include row-by-row-display;
+    background-color: $block-background-color;
+    padding: 30px;
+    @include border;
+}
+
+.conversation-block {
+    background-color: $block-background-color;
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    padding: 20px;
+    justify-content: space-between;
+}
+
+.conversation-block:hover {
+    cursor: pointer;
+    background-color: $post-hover-background-color;
+}

@@ -34,11 +34,13 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId }) => {
 
         request
             .then(({ data }) => {
-                setIsLoading(false);
                 setPosts(data.publications);
                 setGradedPublications(data.gradedPublications || []);
             })
-            .catch(() => {
+            .catch((err) => {
+                console.error('Ошибка загрузки публикаций: ', err);
+            })
+            .finally(() => {
                 setIsLoading(false);
             });
     };
@@ -115,7 +117,9 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId }) => {
 
     return (
         <div className="feed">
-            {posts.length == 0 && !isLoading ? <div>Публикаций нет.</div> : null}
+            {posts.length == 0 && !isLoading ? (
+                <div className="no-info">Публикаций нет.</div>
+            ) : null}
             {isLoading && <div className="loading">Загрузка...</div>}
             {!isLoading &&
                 posts.map((post) => (
@@ -125,7 +129,7 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId }) => {
                         onClick={() => handlePostClick(post.id, post)}>
                         <div className="title">{post.title}</div>
                         <p className="text">{post.text}</p>
-                        <img className="image" src={post.image} alt={post.title} />
+                        {post.image && <img className="image" src={post.image} alt={post.title} />}
                         <div className="buttons-block">
                             <LikeIcon
                                 onClick={(e) => {

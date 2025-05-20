@@ -4,10 +4,10 @@ import './publication-editor.scss';
 
 interface PublicationEditorProps {
     text: string;
-    setText: (value: string) => void;
+    onChange: (text: string) => void;
 }
 
-export const PublicationEditor: React.FC<PublicationEditorProps> = ({ text, setText }) => {
+export const PublicationEditor: React.FC<PublicationEditorProps> = ({ text, onChange }) => {
     const editorModules = {
         toolbar: [['bold', 'italic', 'underline']],
     };
@@ -17,10 +17,10 @@ export const PublicationEditor: React.FC<PublicationEditorProps> = ({ text, setT
         <div className="publication-editor">
             <Editor
                 value={text}
-                onTextChange={(e) => setText(e.textValue)}
+                onTextChange={(e) => onChange(e.textValue)}
                 modules={editorModules}
                 formats={editorFormats}
-                style={{ height: '320px' }}
+                className="custom-editor"
             />
         </div>
     );
