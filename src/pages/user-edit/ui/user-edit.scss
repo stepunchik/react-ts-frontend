@@ -1,0 +1,98 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+.user-form {
+    @include row-by-row-display;
+    gap: 20px;
+    align-items: start;
+    width: 38.5dvw;
+    margin: auto;
+    margin-left: 260px;
+    margin-top: 30px;
+    z-index: 0;
+}
+
+.user-form-item {
+    width: 92%;
+}
+
+.user-form-item input {
+    width: 100%;
+}
+
+.user-form-item label {
+    left: 0;
+}
+
+.title {
+    z-index: 0;
+}
+
+.user-form-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.user-form-block select {
+    padding: 10px;
+    @include border;
+    background-color: white;
+    font-family: $text-font;
+}
+
+.user-form-block button {
+    padding: 10px;
+    @include border;
+    background-color: white;
+    font-family: $text-font;
+}
+
+.option {
+    background-color: white;
+    font-family: $text-font;
+}
+
+.user-form-block input:focus {
+    border-color: $title-text-color;
+}
+
+.user-form-block select:focus {
+    border-color: $title-text-color;
+}
+
+.user-form-block input {
+    padding: 10px;
+    @include border;
+    background-color: white;
+}
+
+.user-form-block-item {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+.sex-input {
+    width: fit-content;
+}
+
+.custom-datepicker {
+    padding: 10px;
+    @include border;
+    background-color: white;
+    box-sizing: border-box;
+    width: 100%;
+    font-family: $text-font;
+    font-size: 1rem;
+}
+
+.react-datepicker__day-names {
+    background-color: #f0f0f0;
+}
+
+.react-datepicker__day-name {
+    background-color: #f0f0f0;
+}

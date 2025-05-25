@@ -16,13 +16,63 @@
 .conversation-block {
     background-color: $block-background-color;
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     width: 100%;
     padding: 20px;
     justify-content: space-between;
+    @include border;
 }
 
 .conversation-block:hover {
     cursor: pointer;
-    background-color: $post-hover-background-color;
+    background-color: $conversation-hover-color;
+}
+
+.last-message {
+    font-family: $text-font;
+    @include text;
+    margin-left: 20px;
+    margin-top: 15px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    background-color: inherit;
+    z-index: 2;
+}
+
+.latest-message-block {
+    display: flex;
+    justify-content: space-between;
+    background-color: inherit;
+}
+
+.latest-message {
+    display: flex;
+}
+
+.unread-count {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    text-align: center;
+    font-family: $title-text-font;
+    margin-top: 2px;
+}
+
+.created_at {
+    background-color: inherit;
+    color: $text-color;
+    font-size: 0.6rem;
+    font-family: $text-font;
+}
+
+.message-info-block {
+    background-color: inherit;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }

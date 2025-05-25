@@ -27,6 +27,32 @@
     cursor: pointer;
 }
 
+.action-icons-block {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 3;
+    background-color: inherit;
+    display: flex;
+    gap: 10px;
+}
+
+.action-icon {
+    width: 24px;
+    height: 24px;
+    background-color: inherit;
+}
+
+.delete-icon {
+    color: red;
+}
+
+.action-icon:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: 0.5ms;
+}
+
 .title {
     @include title-text;
     z-index: 2;
@@ -37,7 +63,7 @@
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 2; /* number of lines to show */
+    -webkit-line-clamp: 2;
     line-clamp: 2;
     -webkit-box-orient: vertical;
     background-color: inherit;
@@ -82,4 +108,25 @@
 
 .no-info {
     background-color: inherit;
+    font-family: $text-font;
+}
+
+.delete-modal {
+    @include border;
+    padding: 20px;
+    @include row-by-row-display;
+    font-family: $title-text-font;
+}
+
+.confirm-btn {
+    padding: 20px;
+    @include border;
+    background-color: #e53935;
+    color: white;
+}
+
+.cancel-btn {
+    padding: 20px;
+    background-color: #9e9e9e;
+    @include border;
 }

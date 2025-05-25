@@ -10,6 +10,8 @@ import { useStateContext } from '../../../app/providers/ContextProvider';
 import { getUser } from '../../../shared/api/endpoints/users';
 import { CreateConversationButton } from '../../../features/conversation/conversation-button';
 import { Statistic } from '../../statistic';
+import { EditIcon } from '../../../shared/assets/EditIcon';
+import { useNavigate } from 'react-router-dom';
 
 interface ProfileProps {
     userId: number;
@@ -17,10 +19,17 @@ interface ProfileProps {
 
 export const Profile: React.FC<ProfileProps> = ({ userId }) => {
     const [user, setUser] = useState<any | null>(null);
+    const [likesQuantity, setLikesQunatity] = useState(0);
+    const [publicationsQuantity, setPublicationsQuantity] = useState(0);
     const { user: currentUser } = useStateContext();
+    const navigate = useNavigate();
 
     useEffect(() => {
-        getUser(userId).then((res) => setUser(res.data));
+        getUser(userId).then((res) => {
+            setUser(res.data.user);
+            setLikesQunatity(res.data.likes_quantity);
+            setPublicationsQuantity(res.data.publications_quantity);
+        });
     }, [userId]);
 
     if (!user) {
@@ -29,11 +38,23 @@ export const Profile: React.FC<ProfileProps> = ({ userId }) => {
 
     const isOwnProfile = currentUser?.id === user.id;
 
+    const handleEditButtonClick = (id: number, user: any) => {
+        navigate(`/users/${id}/edit`, { state: { user } });
+    };
+
     return (
         <div className="profile">
             <div className="main-profile-block">
                 <img className="profile-image" src={user.image} alt={user.name} />
-                <h1 className="username">{user.name}</h1>
+                <div className="user-edit-block">
+                    <h1 className="username">{user.name}</h1>
+                    {isOwnProfile && (
+                        <EditIcon
+                            className="profile-edit-icon"
+                            onClick={() => handleEditButtonClick(user.id, user)}
+                        />
+                    )}
+                </div>
                 <div className="profile-button-block">
                     {isOwnProfile && <LogoutButton style="secondary-button" />}
                     {!isOwnProfile && (
@@ -70,9 +91,12 @@ export const Profile: React.FC<ProfileProps> = ({ userId }) => {
                     </div>
                 </div>
                 <div className="posts-block">
-                    <Feed userProfileId={user.id} />
+                    <Feed userProfileId={userId} />
                 </div>
-                <Statistic userId={user.id} />
+                <Statistic
+                    likesQuantity={likesQuantity}
+                    publicationsQuantity={publicationsQuantity}
+                />
             </div>
         </div>
     );

@@ -1,0 +1,14 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+.statistic-field {
+    background-color: inherit;
+    margin-left: 15px;
+}
+
+.statistic-block-text {
+    background-color: inherit;
+    font-family: $title-text-font;
+    display: flex;
+    align-items: center;
+}

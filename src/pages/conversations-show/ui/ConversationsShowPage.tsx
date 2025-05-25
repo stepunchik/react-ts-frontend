@@ -1,11 +1,15 @@
 import { useEffect, useState } from 'react';
 import echo from '../../../app/services/echo';
 import { useParams, useLocation } from 'react-router-dom';
-import { createMessage } from '../../../shared/api/endpoints/messages';
+import {
+    createMessage,
+    deleteMessage,
+    updateMessage,
+} from '../../../shared/api/endpoints/messages';
 import { getConversation } from '../../../shared/api/endpoints/conversations';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
-
+import TextareaAutosize from 'react-textarea-autosize';
 import './conversations-show.scss';
 import { useStateContext } from '../../../app/providers/ContextProvider';
 
@@ -24,7 +28,16 @@ export const ConversationsShowPage = () => {
     const [messages, setMessages] = useState<ConversationMessage[]>([]);
     const [isLoading, setIsLoading] = useState(false);
     const conversationName = useLocation();
-    const [name, setName] = useState<string>(conversationName.state?.name ?? 'Загрузка...');
+    const [name, setName] = useState<string>(conversationName.state?.name);
+
+    const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
+    const [editedText, setEditedText] = useState<string>('');
+
+    const [contextMenu, setContextMenu] = useState<{
+        x: number;
+        y: number;
+        message: ConversationMessage | null;
+    } | null>(null);
 
     useEffect(() => {
         if (!name && conversationId) {
@@ -40,8 +53,19 @@ export const ConversationsShowPage = () => {
         const channel = echo.private(`conversation.${conversationId}`);
 
         channel.listen('.message.sent', (e: { message: ConversationMessage }) => {
-            console.log(e.message);
             setMessages((prev) => [...prev, e.message]);
+        });
+
+        channel.listen('.message.updated', (e: { message: ConversationMessage }) => {
+            setMessages((prev) =>
+                prev.map((msg) =>
+                    msg.id === e.message.id ? { ...msg, text: e.message.text } : msg
+                )
+            );
+        });
+
+        channel.listen('.message.deleted', (e: { messageId: number }) => {
+            setMessages((prev) => prev.filter((msg) => msg.id !== e.messageId));
         });
 
         return () => {
@@ -65,7 +89,13 @@ export const ConversationsShowPage = () => {
             });
     }, []);
 
-    const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    useEffect(() => {
+        const handleClickOutside = () => setContextMenu(null);
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
+
+    const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
         setText(event.target.value);
     };
 
@@ -94,6 +124,48 @@ export const ConversationsShowPage = () => {
         return format(date, "d MMMM yyyy 'в' HH:mm", { locale: ru });
     }
 
+    function handleRightClick(e: React.MouseEvent<HTMLDivElement>, message: ConversationMessage) {
+        e.preventDefault();
+        setContextMenu({
+            x: e.clientX,
+            y: e.clientY,
+            message,
+        });
+    }
+
+    const handleDeleteMessage = (id: number) => {
+        deleteMessage(id)
+            .then(() => {})
+            .catch((err) => {
+                console.error('Ошибка удаления сообщения', err);
+            })
+            .finally(() => setContextMenu(null));
+    };
+
+    const startEditing = (message: ConversationMessage) => {
+        setEditingMessageId(message.id);
+        setEditedText(message.text);
+        setContextMenu(null);
+    };
+
+    const handleEditKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, messageId: number) => {
+        if (e.key === 'Enter') {
+            handleSaveEditedMessage(messageId);
+        } else if (e.key === 'Escape') {
+            setEditingMessageId(null);
+        }
+    };
+
+    const handleSaveEditedMessage = async (id: number) => {
+        await updateMessage(id, { text: editedText })
+            .then(() => {
+                setEditingMessageId(null);
+            })
+            .catch((err) => {
+                console.error('Ошибка редактирования сообщения:', err);
+            });
+    };
+
     return (
         <div>
             <div className="conversation-container">
@@ -107,16 +179,65 @@ export const ConversationsShowPage = () => {
                         messages.map((message) => (
                             <div
                                 key={message.id}
-                                className={`message ${
-                                    message.sender_id === user?.id ? 'own' : ''
-                                }`}>
-                                <p className="text">{message.text}</p>
+                                className={`message ${message.sender_id === user?.id ? 'own' : ''}`}
+                                onContextMenu={(e) => handleRightClick(e, message)}>
+                                {editingMessageId === message.id ? (
+                                    <input
+                                        className="edit-input"
+                                        type="text"
+                                        value={editedText}
+                                        onChange={(e) => setEditedText(e.target.value)}
+                                        onKeyDown={(e) => handleEditKeyDown(e, message.id)}
+                                        autoFocus
+                                        onBlur={() => setEditingMessageId(null)}
+                                    />
+                                ) : (
+                                    <p className="text">{message.text}</p>
+                                )}
                                 <div className="created-at">{formatDate(message.created_at)}</div>
                             </div>
                         ))}
                 </div>
+                {contextMenu && (
+                    <div
+                        className="context-menu"
+                        style={{
+                            top: contextMenu.y,
+                            left: contextMenu.x,
+                            position: 'absolute',
+                            backgroundColor: 'white',
+                            border: '1px solid #ccc',
+                            padding: '8px',
+                            zIndex: 1000,
+                        }}
+                        onClick={(e) => e.stopPropagation()}>
+                        {contextMenu.message?.sender_id === user.id && (
+                            <div
+                                className="context-menu-item"
+                                onClick={() => {
+                                    if (!contextMenu.message) return;
+                                    startEditing(contextMenu.message);
+                                }}>
+                                Редактировать
+                            </div>
+                        )}
+                        <div
+                            className="context-menu-item"
+                            onClick={() => {
+                                if (!contextMenu.message) return;
+                                handleDeleteMessage(contextMenu.message.id);
+                            }}>
+                            Удалить
+                        </div>
+                    </div>
+                )}
                 <form onSubmit={handleSubmit} className="send-message-form">
-                    <input type="text" value={text} onChange={handleChange} />
+                    <TextareaAutosize
+                        className="message-textarea"
+                        value={text}
+                        onChange={handleChange}
+                        rows={1}
+                    />
                     <button type="submit" className="button form-button">
                         Отправить
                     </button>
