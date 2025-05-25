@@ -1,10 +1,13 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { PublicationEditor } from '../../../features/publication-editor';
 import { createPublication } from '../../../shared/api/endpoints/publications';
 
 import './publication-create.scss';
 
 export const PublicationCreatePage = () => {
+    const navigate = useNavigate();
+
     const [formData, setFormData] = useState<{
         title: string;
         text: string;
@@ -40,11 +43,9 @@ export const PublicationCreatePage = () => {
         }
 
         await createPublication(data)
-            .then(() => {
-                setFormData({
-                    title: '',
-                    text: '',
-                    image: null,
+            .then((res) => {
+                navigate(`/publications/${res.data.publication.id}`, {
+                    state: { post: res.data.publication },
                 });
             })
             .catch((err) => {

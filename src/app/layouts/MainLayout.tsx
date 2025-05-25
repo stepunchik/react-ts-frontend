@@ -17,10 +17,14 @@ export const MainLayout = () => {
                 setUser(data.data);
             });
         }
-    }, []);
+    }, [token]);
 
     if (!token) {
         return <GuestLayout />;
+    }
+
+    if (token && !user) {
+        return <div className="loading">Загрузка пользователя...</div>;
     }
 
     return (

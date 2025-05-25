@@ -8,6 +8,7 @@ import { ConversationsPage } from '../../pages/conversations';
 import { PublicationShowPage } from '../../pages/publication-show';
 import { PublicationCreatePage } from '../../pages/publication-create';
 import { ConversationsShowPage } from '../../pages/conversations-show';
+import { UserEditPage } from '../../pages/user-edit';
 
 export const router = createBrowserRouter([
     {
@@ -31,11 +32,15 @@ export const router = createBrowserRouter([
                 element: <ProfilePage />,
             },
             {
+                path: '/users/:id/edit',
+                element: <UserEditPage />,
+            },
+            {
                 path: '/publications/create',
                 element: <PublicationCreatePage />,
             },
             {
-                path: '/publications/edit/:id',
+                path: '/publications/:id/edit',
                 element: <PublicationEditPage />,
             },
             {

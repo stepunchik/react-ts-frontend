@@ -8,6 +8,21 @@
     margin-left: 100px;
 }
 
+.profile-edit-icon {
+    z-index: 3;
+    background-color: inherit;
+    width: 32px;
+    height: 32px;
+    margin-left: 10px;
+    z-index: 0;
+}
+
+.profile-edit-icon:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+    transition: 0.5ms;
+}
+
 .main-profile-block {
     @include border;
     @include shadow;
@@ -98,4 +113,10 @@
 
 .posts-block {
     z-index: 0;
+}
+
+.user-edit-block {
+    background-color: inherit;
+    display: flex;
+    align-items: center;
 }
