@@ -1,4 +1,4 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { GuestLayout } from './GuestLayout';
 import { Sidebar } from '../../widgets/sidebar';
@@ -7,9 +7,11 @@ import { useStateContext } from '../providers/ContextProvider';
 
 import './layout.scss';
 import { currentUser } from '../../shared/api/endpoints/users';
+import { ForbiddenPage } from '../../pages/forbidden';
 
 export const MainLayout = () => {
     const { user, token, setUser } = useStateContext();
+    const [searchTerm, setSearchTerm] = useState('');
 
     useEffect(() => {
         if (token) {
@@ -18,6 +20,10 @@ export const MainLayout = () => {
             });
         }
     }, [token]);
+
+    if (user.roles?.includes('admin')) {
+        return <ForbiddenPage />;
+    }
 
     if (!token) {
         return <GuestLayout />;
@@ -29,10 +35,10 @@ export const MainLayout = () => {
 
     return (
         <div>
-            <Header isAuthenticated={true} />
+            <Header isAuthenticated={true} searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
             <Sidebar isAuthenticated={true} currentUser={user} />
             <main className="main">
-                <Outlet />
+                <Outlet context={{ searchTerm }} />
             </main>
         </div>
     );

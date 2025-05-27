@@ -10,9 +10,11 @@ ReactModal.setAppElement('#root');
 
 interface HeaderProps {
     isAuthenticated: boolean;
+    searchTerm: string;
+    setSearchTerm: (term: string) => void;
 }
 
-export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
+export const Header: React.FC<HeaderProps> = ({ isAuthenticated, searchTerm, setSearchTerm }) => {
     const [isLoginDialogOpen, setIsLoginDialogOpen] = useState(false);
 
     const openLoginDialog = () => setIsLoginDialogOpen(true);
@@ -20,7 +22,7 @@ export const Header: React.FC<HeaderProps> = ({ isAuthenticated }) => {
 
     return (
         <header className="header">
-            <Search />
+            <Search value={searchTerm} onChange={setSearchTerm} />
             {isAuthenticated && (
                 <Link to="/publications/create" className="header-button">
                     Создать

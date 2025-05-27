@@ -17,7 +17,7 @@ export const LoginDialog: React.FC<LoginDialogProps> = ({ onClose }) => {
 	return (
 		<div className="dialog">
 			<div className="text-block">
-				<h2 className="title">{isSignup ? 'Регистрация' : 'Вход'}</h2>
+				<h2 className="title">{isSignup ? 'Создайте аккаунт' : 'Вход'}</h2>
 				{!isSignup && <p className="text">Войдите в свой аккаунт.</p>}
 			</div>
 

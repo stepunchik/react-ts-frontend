@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import echo from '../../../app/services/echo';
 import { useParams, useLocation } from 'react-router-dom';
 import {
@@ -38,6 +38,16 @@ export const ConversationsShowPage = () => {
         y: number;
         message: ConversationMessage | null;
     } | null>(null);
+
+    const messagesEndRef = useRef<HTMLDivElement>(null);
+
+    const scrollToBottom = () => {
+        messagesEndRef.current?.scrollIntoView({ behavior: 'auto' });
+    };
+
+    useEffect(() => {
+        scrollToBottom();
+    }, [messages]);
 
     useEffect(() => {
         if (!name && conversationId) {
@@ -197,6 +207,7 @@ export const ConversationsShowPage = () => {
                                 <div className="created-at">{formatDate(message.created_at)}</div>
                             </div>
                         ))}
+                    <div ref={messagesEndRef} />
                 </div>
                 {contextMenu && (
                     <div

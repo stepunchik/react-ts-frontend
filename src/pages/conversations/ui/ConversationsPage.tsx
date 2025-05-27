@@ -21,7 +21,7 @@ export const ConversationsPage = () => {
     const { user: currentUser } = useStateContext();
     const navigate = useNavigate();
     const [conversations, setConversations] = useState<any[]>([]);
-    const [unreadMessages, setUnreadMessages] = useState<any[]>([]);
+    const [unreadMessages, setUnreadMessages] = useState<Record<number, number>>({});
     const [isLoading, setIsLoading] = useState(false);
 
     useEffect(() => {
@@ -38,8 +38,9 @@ export const ConversationsPage = () => {
     }, []);
 
     useEffect(() => {
-        const userId = currentUser.id;
+        if (!currentUser?.id) return;
 
+        const userId = currentUser.id;
         const userChannel = echo.private(`user.${userId}`);
 
         userChannel.listen('.message.sent', (event: { message: ConversationMessage }) => {
@@ -66,6 +67,16 @@ export const ConversationsPage = () => {
 
                 return updated;
             });
+
+            setUnreadMessages((prev) => {
+                const isOwnMessage = message.sender_id === currentUser.id;
+                if (isOwnMessage) return prev;
+
+                return {
+                    ...prev,
+                    [message.conversation_id]: (prev[message.conversation_id] || 0) + 1,
+                };
+            });
         });
 
         userChannel.listen('.message.updated', (e: any) => {
@@ -86,7 +97,6 @@ export const ConversationsPage = () => {
                             },
                         };
                     }
-
                     return conversation;
                 });
             });
@@ -95,7 +105,7 @@ export const ConversationsPage = () => {
         return () => {
             echo.leave(`user.${userId}`);
         };
-    }, [currentUser.id]);
+    }, [currentUser?.id]);
 
     const handleConversationClick = (id: number, name: string) => {
         navigate(`/conversations/${id}`, { state: { name } });

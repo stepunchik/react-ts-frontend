@@ -121,7 +121,7 @@ export const UserEditPage = () => {
                 console.error('Ошибка загрузки пользователя:', err);
             });
     };
-
+    console.log(user);
     return (
         <div>
             {isLoading && <div className="loading">Загрузка...</div>}
@@ -236,6 +236,10 @@ export const UserEditPage = () => {
                             Загрузите изображение:
                         </label>
                         <input type="file" id="image" name="image" onChange={handleChange} />
+                    </div>
+                    <div>
+                        <div className="text">Старое изображение:</div>
+                        <img src={user.image} alt={user.name} className="user-edit-image" />
                     </div>
                     <div className="button-block">
                         <button type="submit" className="button form-button">
