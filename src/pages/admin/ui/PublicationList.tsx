@@ -19,7 +19,7 @@ const ApproveButton = () => {
 
     const handleApprove = async () => {
         try {
-            await axiosClient.post(`/admin/publications/${record?.id}/approve`);
+            await axiosClient.patch(`/admin/publications/${record?.id}/approve`);
             notify('Approved');
             refresh();
         } catch (error) {
@@ -41,7 +41,7 @@ const RejectButton = () => {
 
     const handleReject = async () => {
         try {
-            await axiosClient.post(`/admin/publications/${record?.id}/reject`);
+            await axiosClient.patch(`/admin/publications/${record?.id}/reject`);
             notify('Rejected');
             refresh();
         } catch (error) {

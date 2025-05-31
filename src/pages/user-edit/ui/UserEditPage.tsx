@@ -121,7 +121,7 @@ export const UserEditPage = () => {
                 console.error('Ошибка загрузки пользователя:', err);
             });
     };
-    console.log(user);
+
     return (
         <div>
             {isLoading && <div className="loading">Загрузка...</div>}

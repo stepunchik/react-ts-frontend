@@ -12,25 +12,36 @@ import { ForbiddenPage } from '../../pages/forbidden';
 export const MainLayout = () => {
     const { user, token, setUser } = useStateContext();
     const [searchTerm, setSearchTerm] = useState('');
+    const [isLoading, setIsLoading] = useState(true);
 
     useEffect(() => {
         if (token) {
-            currentUser().then((data: any) => {
-                setUser(data.data);
-            });
+            currentUser()
+                .then((data: any) => {
+                    setUser(data.data);
+                })
+                .finally(() => {
+                    setIsLoading(false);
+                });
+        } else {
+            setIsLoading(false);
         }
     }, [token]);
 
-    if (user.roles?.includes('admin')) {
-        return <ForbiddenPage />;
+    if (isLoading) {
+        return <div className="loading">Загрузка пользователя...</div>;
     }
 
     if (!token) {
         return <GuestLayout />;
     }
 
-    if (token && !user) {
-        return <div className="loading">Загрузка пользователя...</div>;
+    if (!user) {
+        return <div className="error">Ошибка загрузки пользователя</div>;
+    }
+
+    if (user.roles?.includes('admin')) {
+        return <ForbiddenPage />;
     }
 
     return (

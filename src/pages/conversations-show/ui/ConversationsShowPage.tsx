@@ -180,7 +180,7 @@ export const ConversationsShowPage = () => {
         <div>
             <div className="conversation-container">
                 <div className="title conversation-title">{name}</div>
-                {messages.length == 0 && !isLoading ? (
+                {!isLoading && messages.length == 0 ? (
                     <div className="no-info">Сообщений нет.</div>
                 ) : null}
                 {isLoading && <div className="loading">Загрузка...</div>}
