@@ -54,12 +54,8 @@ export const SignupForm: React.FC<SignupFormProps> = ({ onClose }) => {
         }
 
         try {
-            await signup(formData);
+            const response = await signup(formData);
 
-            const response = await login({
-                email: formData.email,
-                password: formData.password,
-            });
             const data = response.data;
 
             setUser(data.user);

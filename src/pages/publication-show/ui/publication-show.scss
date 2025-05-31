@@ -51,4 +51,11 @@
 
 .show-text {
     @include text;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    background-color: inherit;
+    z-index: 2;
+    width: 100%;
 }

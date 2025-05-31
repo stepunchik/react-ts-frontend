@@ -21,6 +21,7 @@
         @include title-text;
         text-transform: uppercase;
         user-select: none;
+        font-size: 1.5rem;
     }
 
     .text {
@@ -32,6 +33,7 @@
     .link {
         background-color: $block-background-color;
         cursor: pointer;
+        text-decoration: underline;
     }
 }
 

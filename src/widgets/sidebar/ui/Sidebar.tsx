@@ -3,7 +3,7 @@ import './sidebar.scss';
 
 interface SidebarProps {
     isAuthenticated: boolean;
-    currentUser: any;
+    currentUser?: any;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({ isAuthenticated, currentUser }) => {

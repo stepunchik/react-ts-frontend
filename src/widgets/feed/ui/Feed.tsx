@@ -17,11 +17,12 @@ import ReactModal from 'react-modal';
 
 interface FeedProps {
     userProfileId?: number;
+    searchTerm?: string;
 }
 
 ReactModal.setAppElement('#root');
 
-export const Feed: React.FC<FeedProps> = ({ userProfileId }) => {
+export const Feed: React.FC<FeedProps> = ({ userProfileId, searchTerm = '' }) => {
     const navigate = useNavigate();
     const { user } = useStateContext();
     const [posts, setPosts] = useState<any[]>([]);
@@ -149,14 +150,23 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId }) => {
             });
     };
 
+    const filteredPosts = posts.filter(
+        (post) =>
+            post.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            post.text.toLowerCase().includes(searchTerm.toLowerCase())
+    );
+
     return (
         <div className="feed">
             {posts.length == 0 && !isLoading ? (
                 <div className="no-info">Публикаций нет.</div>
             ) : null}
+            {!isLoading && filteredPosts.length === 0 && searchTerm && (
+                <div className="no-info">Ничего не найдено по запросу «{searchTerm}».</div>
+            )}
             {isLoading && <div className="loading">Загрузка...</div>}
             {!isLoading &&
-                posts.map((post) => (
+                filteredPosts.map((post) => (
                     <div
                         key={post.id}
                         className="publication-block"
