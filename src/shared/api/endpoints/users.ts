@@ -1,4 +1,4 @@
-import { GET, POST } from '../client';
+import { DELETE, GET, POST } from '../client';
 
 export function topUsers() {
     return GET('/users/top');
@@ -6,6 +6,10 @@ export function topUsers() {
 
 export function getUser(userId: number) {
     return GET(`/users/${userId}`);
+}
+
+export function deleteUser(userId: number) {
+    return DELETE(`/users/${userId}`);
 }
 
 export function updateUser(userId: number, data: FormData) {

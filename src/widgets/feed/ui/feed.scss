@@ -116,7 +116,7 @@
     padding: 20px;
     @include row-by-row-display;
     font-family: $title-text-font;
-    background-color: $background-color;
+    background-color: $block-background-color;
 }
 
 .confirm-btn {

@@ -10,6 +10,7 @@ import { PublicationCreatePage } from '../../pages/publication-create';
 import { ConversationsShowPage } from '../../pages/conversations-show';
 import { UserEditPage } from '../../pages/user-edit';
 import { AdminPage } from '../../pages/admin';
+import { SettingsPage } from '../../pages/settings';
 
 export const router = createBrowserRouter([
     {
@@ -47,6 +48,10 @@ export const router = createBrowserRouter([
             {
                 path: '/publications/:id',
                 element: <PublicationShowPage />,
+            },
+            {
+                path: '/settings',
+                element: <SettingsPage />,
             },
         ],
     },

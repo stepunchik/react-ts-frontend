@@ -111,6 +111,7 @@ export const ConversationsShowPage = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (!text) return;
         await createMessage(text, conversationId)
             .then(() => {
                 setText('');
