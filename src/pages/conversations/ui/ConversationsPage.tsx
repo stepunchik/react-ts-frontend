@@ -1,12 +1,13 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { getConversations } from '../../../shared/api/endpoints/conversations';
+import { deleteConversation, getConversations } from '@shared/api/endpoints/conversations';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import echo from '../../../app/services/echo';
+import echo from '@app/services/echo';
 
 import './conversations.scss';
-import { useStateContext } from '../../../app/providers/ContextProvider';
+import { useStateContext } from '@app/providers/ContextProvider';
+import ReactModal from 'react-modal';
 
 interface ConversationMessage {
     id: number;
@@ -23,6 +24,29 @@ export const ConversationsPage = () => {
     const [conversations, setConversations] = useState<any[]>([]);
     const [unreadMessages, setUnreadMessages] = useState<Record<number, number>>({});
     const [isLoading, setIsLoading] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [conversationToDelete, setConversationToDelete] = useState<number | null>(null);
+
+    const [contextMenu, setContextMenu] = useState<{
+        x: number;
+        y: number;
+        conversationId: number | null;
+    } | null>(null);
+
+    function handleRightClick(e: React.MouseEvent<HTMLDivElement>, conversationId: number) {
+        e.preventDefault();
+        setContextMenu({
+            x: e.clientX,
+            y: e.clientY,
+            conversationId,
+        });
+    }
+
+    useEffect(() => {
+        const handleClickOutside = () => setContextMenu(null);
+        document.addEventListener('click', handleClickOutside);
+        return () => document.removeEventListener('click', handleClickOutside);
+    }, []);
 
     useEffect(() => {
         setIsLoading(true);
@@ -125,6 +149,28 @@ export const ConversationsPage = () => {
         return format(date, "d MMMM yyyy 'в' HH:mm", { locale: ru });
     }
 
+    const openDeleteModal = (id: number) => {
+        setConversationToDelete(id);
+        setContextMenu(null);
+        setIsModalOpen(true);
+    };
+
+    const confirmDelete = () => {
+        if (conversationToDelete === null) return;
+
+        deleteConversation(conversationToDelete)
+            .then(() => {
+                setConversations((prev) => prev.filter((c) => c.id !== conversationToDelete));
+            })
+            .catch((err) => {
+                console.error('Ошибка при удалении диалога.', err);
+            })
+            .finally(() => {
+                setConversationToDelete(null);
+                setIsModalOpen(false);
+            });
+    };
+
     return (
         <div className="conversations-list">
             {conversations.length == 0 && !isLoading ? (
@@ -136,16 +182,30 @@ export const ConversationsPage = () => {
                     <div
                         key={conversation.id}
                         className="conversation-block"
-                        onClick={() => handleConversationClick(conversation.id, conversation.name)}>
+                        onClick={() =>
+                            handleConversationClick(
+                                conversation.id,
+                                conversation.first_user.id !== currentUser.id
+                                    ? conversation.first_user.name
+                                    : conversation.second_user.name
+                            )
+                        }
+                        onContextMenu={(e: React.MouseEvent<HTMLDivElement>) =>
+                            handleRightClick(e, conversation.id)
+                        }>
                         <div className="title">
-                            {conversation.id} {conversation.name}
+                            {conversation.first_user.id !== currentUser.id
+                                ? conversation.first_user.name
+                                : conversation.second_user.name}
                         </div>
                         {conversation.latest_message && (
                             <div className="latest-message-block">
                                 <div className="last-message">
                                     {conversation.latest_message.sender_id === currentUser.id
                                         ? 'Вы: '
-                                        : `${conversation.name}: `}
+                                        : conversation.first_user.id !== currentUser.id
+                                        ? conversation.first_user.name + ': '
+                                        : conversation.second_user.name + ': '}
                                     {conversation.latest_message.text}
                                 </div>
                                 <div className="message-info-block">
@@ -162,6 +222,46 @@ export const ConversationsPage = () => {
                         )}
                     </div>
                 ))}
+            {contextMenu && (
+                <div
+                    className="context-menu"
+                    style={{
+                        top: contextMenu.y,
+                        left: contextMenu.x,
+                        position: 'absolute',
+                        backgroundColor: 'white',
+                        border: '1px solid #ccc',
+                        padding: '8px',
+                        zIndex: 1000,
+                    }}
+                    onClick={(e) => e.stopPropagation()}>
+                    <div
+                        className="context-menu-item"
+                        onClick={() => {
+                            if (!contextMenu.conversationId) return;
+                            openDeleteModal(contextMenu.conversationId);
+                        }}>
+                        Удалить
+                    </div>
+                </div>
+            )}
+
+            <ReactModal
+                isOpen={isModalOpen}
+                onRequestClose={() => setIsModalOpen(false)}
+                contentLabel="Подтверждение удаления"
+                className="modal delete-modal">
+                <h2>Удалить диалог?</h2>
+                <p>Вы уверены, что хотите удалить этот диалог? Это действие нельзя отменить.</p>
+                <div className="modal-buttons">
+                    <button onClick={confirmDelete} className="confirm-btn">
+                        Удалить
+                    </button>
+                    <button onClick={() => setIsModalOpen(false)} className="cancel-btn">
+                        Отмена
+                    </button>
+                </div>
+            </ReactModal>
         </div>
     );
 };

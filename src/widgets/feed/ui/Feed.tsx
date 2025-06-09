@@ -4,15 +4,15 @@ import {
     deletePublication,
     publications,
     userPublications,
-} from '../../../shared/api/endpoints/publications';
-import { like, dislike, updateGrade, deleteGrade } from '../../../shared/api/endpoints/grades';
-import { useStateContext } from '../../../app/providers/ContextProvider';
-import { LikeIcon } from '../../../shared/assets/LikeIcon';
-import { DislikeIcon } from '../../../shared/assets/DislikeIcon';
+} from '@shared/api/endpoints/publications';
+import { like, dislike, updateGrade, deleteGrade } from '@shared/api/endpoints/grades';
+import { useStateContext } from '@app/providers/ContextProvider';
+import { LikeIcon } from '@shared/assets/LikeIcon';
+import { DislikeIcon } from '@shared/assets/DislikeIcon';
 
 import './feed.scss';
-import { EditIcon } from '../../../shared/assets/EditIcon';
-import { TrashIcon } from '../../../shared/assets/TrashIcon';
+import { EditIcon } from '@shared/assets/EditIcon';
+import { TrashIcon } from '@shared/assets/TrashIcon';
 import ReactModal from 'react-modal';
 
 interface FeedProps {

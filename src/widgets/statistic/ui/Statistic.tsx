@@ -1,5 +1,5 @@
-import { LikeIcon } from '../../../shared/assets/LikeIcon';
-import { PublicationIcon } from '../../../shared/assets/PublicationIcon';
+import { LikeIcon } from '@shared/assets/LikeIcon';
+import { PublicationIcon } from '@shared/assets/PublicationIcon';
 
 import './statistic.scss';
 

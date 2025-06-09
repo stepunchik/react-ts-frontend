@@ -10,7 +10,7 @@ import {
 import { Button } from '@mui/material';
 import CheckIcon from '@mui/icons-material/Check';
 import CloseIcon from '@mui/icons-material/Close';
-import axiosClient from '../../../shared/api/client';
+import axiosClient from '@shared/api/client';
 
 const ApproveButton = () => {
     const record = useRecordContext();

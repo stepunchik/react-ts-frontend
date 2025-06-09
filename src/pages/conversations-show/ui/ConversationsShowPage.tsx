@@ -1,17 +1,13 @@
 import { useEffect, useState, useRef } from 'react';
-import echo from '../../../app/services/echo';
+import echo from '@app/services/echo';
 import { useParams, useLocation } from 'react-router-dom';
-import {
-    createMessage,
-    deleteMessage,
-    updateMessage,
-} from '../../../shared/api/endpoints/messages';
-import { getConversation } from '../../../shared/api/endpoints/conversations';
+import { createMessage, deleteMessage, updateMessage } from '@shared/api/endpoints/messages';
+import { getConversation } from '@shared/api/endpoints/conversations';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
 import TextareaAutosize from 'react-textarea-autosize';
 import './conversations-show.scss';
-import { useStateContext } from '../../../app/providers/ContextProvider';
+import { useStateContext } from '@app/providers/ContextProvider';
 
 interface ConversationMessage {
     id: number;
@@ -111,6 +107,7 @@ export const ConversationsShowPage = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
+        if (!text) return;
         await createMessage(text, conversationId)
             .then(() => {
                 setText('');

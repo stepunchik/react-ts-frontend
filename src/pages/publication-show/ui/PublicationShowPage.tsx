@@ -1,10 +1,10 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import './publication-show.scss';
-import { BackIcon } from '../../../shared/assets/BackIcon';
+import { BackIcon } from '@shared/assets/BackIcon';
 import { useEffect, useState } from 'react';
-import { getUser } from '../../../shared/api/endpoints/users';
-import { showPublication } from '../../../shared/api/endpoints/publications';
+import { getUser } from '@shared/api/endpoints/users';
+import { showPublication } from '@shared/api/endpoints/publications';
 
 export const PublicationShowPage = () => {
     const [user, setUser] = useState<any | null>(null);

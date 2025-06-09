@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import ReactModal from 'react-modal';
-import { LoginDialog } from '../../login-dialog';
-import { Search } from '../../../features/search/ui/Search';
+import { LoginDialog } from '@widgets/login-dialog';
+import { Search } from '@features/search/ui/Search';
 
 import './header.scss';
 import { Link } from 'react-router-dom';

@@ -1,6 +1,6 @@
 import { Navigate } from 'react-router-dom';
-import { useStateContext } from '../../../../app/providers/ContextProvider';
-import { logout } from '../../../../shared/api/endpoints/logout';
+import { useStateContext } from '@app/providers/ContextProvider';
+import { logout } from '@shared/api/endpoints/logout';
 
 interface LogoutButtonProps {
     style: string;

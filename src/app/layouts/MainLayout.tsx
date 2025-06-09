@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import { Outlet } from 'react-router-dom';
 import { GuestLayout } from './GuestLayout';
-import { Sidebar } from '../../widgets/sidebar';
-import { Header } from '../../widgets/header';
+import { Sidebar } from '@widgets/sidebar';
+import { Header } from '@widgets/header';
 import { useStateContext } from '../providers/ContextProvider';
 
 import './layout.scss';
-import { currentUser } from '../../shared/api/endpoints/users';
-import { ForbiddenPage } from '../../pages/forbidden';
+import { currentUser } from '@shared/api/endpoints/users';
+import { ForbiddenPage } from '@pages/forbidden';
 
 export const MainLayout = () => {
     const { user, token, setUser } = useStateContext();

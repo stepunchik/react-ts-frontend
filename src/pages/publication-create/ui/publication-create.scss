@@ -1,14 +1,16 @@
 @import '/src/app/styles/variables.scss';
 @import '/src/app/styles/mixins.scss';
 
+.publication-create-page {
+    margin-left: 260px;
+    margin-top: 30px;
+}
+
 .publication-form {
     @include row-by-row-display;
     gap: 20px;
     align-items: start;
     width: 38.5dvw;
-    margin: auto;
-    margin-left: 260px;
-    margin-top: 30px;
     z-index: 0;
 }
 

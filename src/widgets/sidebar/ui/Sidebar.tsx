@@ -28,6 +28,13 @@ export const Sidebar: React.FC<SidebarProps> = ({ isAuthenticated, currentUser }
                     </Link>
                 </div>
             )}
+            {isAuthenticated && (
+                <div className="sidebar-block">
+                    <Link to="/settings" className="link">
+                        Настройки
+                    </Link>
+                </div>
+            )}
         </nav>
     );
 };

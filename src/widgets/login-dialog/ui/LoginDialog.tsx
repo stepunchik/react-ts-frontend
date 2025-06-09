@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { LoginForm, SignupForm } from '../../../features/auth';
+import { LoginForm, SignupForm } from '@features/auth';
 
 import './login-dialog.scss';
 

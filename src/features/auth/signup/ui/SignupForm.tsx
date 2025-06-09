@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { signupSchema } from '../model/signupSchema';
-import { useStateContext } from '../../../../app/providers/ContextProvider';
+import { useStateContext } from '@app/providers/ContextProvider';
 import { ZodError } from 'zod';
-import { signup } from '../../../../shared/api/endpoints/signup';
-import { login } from '../../../../shared/api/endpoints/login';
+import { signup } from '@shared/api/endpoints/signup';
+import { login } from '@shared/api/endpoints/login';
 
 interface SignupFormProps {
     onClose: () => void;

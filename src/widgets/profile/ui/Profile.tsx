@@ -1,16 +1,15 @@
 import { useEffect, useState } from 'react';
-import { LogoutButton } from '../../../features/auth';
-import { BirthdayIcon } from '../../../shared/assets/BirthdayIcon';
-import { EmailIcon } from '../../../shared/assets/EmailIcon';
-import { SexIcon } from '../../../shared/assets/SexIcon';
-import { Feed } from '../../feed';
+import { BirthdayIcon } from '@shared/assets/BirthdayIcon';
+import { EmailIcon } from '@shared/assets/EmailIcon';
+import { SexIcon } from '@shared/assets/SexIcon';
+import { Feed } from '@widgets/feed';
 
 import './profile.scss';
-import { useStateContext } from '../../../app/providers/ContextProvider';
-import { getUser } from '../../../shared/api/endpoints/users';
-import { CreateConversationButton } from '../../../features/conversation/conversation-button';
-import { Statistic } from '../../statistic';
-import { EditIcon } from '../../../shared/assets/EditIcon';
+import { useStateContext } from '@app/providers/ContextProvider';
+import { getUser } from '@shared/api/endpoints/users';
+import { CreateConversationButton } from '@features/conversation/conversation-button';
+import { Statistic } from '@widgets/statistic';
+import { EditIcon } from '@shared/assets/EditIcon';
 import { useNavigate } from 'react-router-dom';
 
 interface ProfileProps {
@@ -56,7 +55,6 @@ export const Profile: React.FC<ProfileProps> = ({ userId }) => {
                     )}
                 </div>
                 <div className="profile-button-block">
-                    {isOwnProfile && <LogoutButton style="secondary-button" />}
                     {!isOwnProfile && (
                         <CreateConversationButton
                             name={user.name}
