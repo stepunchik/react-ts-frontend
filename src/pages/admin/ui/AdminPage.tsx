@@ -3,9 +3,9 @@ import { authProvider } from './authProvider';
 import { dataProvider } from './dataProvider';
 import { PublicationList } from './PublicationList';
 import { UsersList } from './UsersList';
-import { useStateContext } from '../../../app/providers/ContextProvider';
-import { ForbiddenPage } from '../../forbidden';
-import { currentUser } from '../../../shared/api/endpoints/users';
+import { useStateContext } from '@app/providers/ContextProvider';
+import { ForbiddenPage } from '@pages/forbidden';
+import { currentUser } from '@shared/api/endpoints/users';
 import { useEffect, useState } from 'react';
 
 export const AdminPage = () => {

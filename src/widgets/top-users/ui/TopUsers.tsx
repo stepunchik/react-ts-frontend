@@ -2,7 +2,7 @@ import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 
 import './top-users.scss';
-import { lastWeekTopUsers, topUsers } from '../../../shared/api/endpoints/users';
+import { lastWeekTopUsers, topUsers } from '@shared/api/endpoints/users';
 
 export const TopUsers = () => {
     const [top, setTop] = useState<any[]>([]);

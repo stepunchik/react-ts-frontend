@@ -1,10 +1,11 @@
 import { Link, useNavigate } from 'react-router-dom';
-import { useStateContext } from '../../../app/providers/ContextProvider';
+import { useStateContext } from '@app/providers/ContextProvider';
 import { useState } from 'react';
 import ReactModal from 'react-modal';
-import { deleteUser } from '../../../shared/api/endpoints/users';
+import { deleteUser } from '@shared/api/endpoints/users';
 
 import './settings.scss';
+import { LogoutButton } from '@features/auth';
 
 export const SettingsPage = () => {
     const navigate = useNavigate();
@@ -36,6 +37,7 @@ export const SettingsPage = () => {
             <div onClick={openDeleteModal} className="settings-item">
                 Удалить аккаунт
             </div>
+            <LogoutButton style="settings-item" />
 
             <ReactModal
                 isOpen={isModalOpen}

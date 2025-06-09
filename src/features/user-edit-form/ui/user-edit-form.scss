@@ -1,0 +1,103 @@
+@import '/src/app/styles/variables.scss';
+@import '/src/app/styles/mixins.scss';
+
+.user-form {
+    @include row-by-row-display;
+    gap: 20px;
+    align-items: start;
+    width: 38.5dvw;
+    margin: auto;
+    z-index: 0;
+}
+
+.user-form-item {
+    width: 92%;
+}
+
+.image-form-item {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.image-form-item input {
+    padding: 10px;
+    @include border;
+    background-color: white;
+}
+
+.image-upload {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.user-form-item input {
+    width: 100%;
+}
+
+.user-form-item label {
+    left: 0;
+}
+
+.user-form-block {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.user-form-block select {
+    padding: 10px;
+    @include border;
+    background-color: white;
+    font-family: $text-font;
+}
+
+.user-form-block button {
+    padding: 10px;
+    @include border;
+    background-color: white;
+    font-family: $text-font;
+}
+
+.option {
+    background-color: white;
+    font-family: $text-font;
+}
+
+.user-form-block input:focus {
+    border-color: $title-text-color;
+}
+
+.user-form-block select:focus {
+    border-color: $title-text-color;
+}
+
+.user-form-block input {
+    padding: 10px;
+    @include border;
+    background-color: white;
+}
+
+.user-form-block-item {
+    width: fit-content;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+}
+
+.sex-input {
+    width: fit-content;
+}
+
+.user-edit-image {
+    width: 100%;
+    margin-top: 10px;
+}

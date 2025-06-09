@@ -1,6 +1,6 @@
-import axiosClient from '../../../shared/api/client';
-import { login } from '../../../shared/api/endpoints/login';
-import { logout } from '../../../shared/api/endpoints/logout';
+import axiosClient from '@shared/api/client';
+import { login } from '@shared/api/endpoints/login';
+import { logout } from '@shared/api/endpoints/logout';
 
 interface AuthProviderParams {
     username: string;

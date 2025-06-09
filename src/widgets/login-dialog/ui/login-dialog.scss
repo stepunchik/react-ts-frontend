@@ -99,9 +99,3 @@
     font-size: 1.25rem;
     font-weight: 700;
 }
-
-.error {
-    @include text;
-    color: $error-text-color;
-    font-size: 0.75rem;
-}

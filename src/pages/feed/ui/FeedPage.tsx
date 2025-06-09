@@ -1,5 +1,5 @@
-import { Feed } from '../../../widgets/feed';
-import { TopUsers } from '../../../widgets/top-users';
+import { Feed } from '@widgets/feed';
+import { TopUsers } from '@widgets/top-users';
 import { useOutletContext } from 'react-router-dom';
 import './feed-page.scss';
 

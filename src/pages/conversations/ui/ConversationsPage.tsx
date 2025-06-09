@@ -1,12 +1,12 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { deleteConversation, getConversations } from '../../../shared/api/endpoints/conversations';
+import { deleteConversation, getConversations } from '@shared/api/endpoints/conversations';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
-import echo from '../../../app/services/echo';
+import echo from '@app/services/echo';
 
 import './conversations.scss';
-import { useStateContext } from '../../../app/providers/ContextProvider';
+import { useStateContext } from '@app/providers/ContextProvider';
 import ReactModal from 'react-modal';
 
 interface ConversationMessage {

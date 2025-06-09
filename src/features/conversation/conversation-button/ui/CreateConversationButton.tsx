@@ -1,5 +1,6 @@
 import { useNavigate } from 'react-router-dom';
-import { createConversation } from '../../../../shared/api/endpoints/conversations';
+import { createConversation } from '@shared/api/endpoints/conversations';
+import { useStateContext } from '@app/providers/ContextProvider';
 
 interface CreateConversationButtonProps {
     name: string;
@@ -12,9 +13,11 @@ export const CreateConversationButton: React.FC<CreateConversationButtonProps> =
     second_user,
     _className,
 }) => {
+    const { token } = useStateContext();
     const navigate = useNavigate();
     const handleCreateConversation = async (event: { preventDefault: () => void }) => {
         event.preventDefault();
+        if (!token) return;
 
         try {
             await createConversation(name, second_user).then((res) => {

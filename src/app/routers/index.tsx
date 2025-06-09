@@ -1,16 +1,16 @@
 import { createBrowserRouter } from 'react-router-dom';
-import { FeedPage } from '../../pages/feed';
-import { ProfilePage } from '../../pages/profile';
-import { PublicationEditPage } from '../../pages/publication-edit';
+import { FeedPage } from '@pages/feed';
+import { ProfilePage } from '@pages/profile';
+import { PublicationEditPage } from '@pages/publication-edit';
 import { MainLayout } from '../layouts/MainLayout';
-import { NotFoundPage } from '../../pages/not-found';
-import { ConversationsPage } from '../../pages/conversations';
-import { PublicationShowPage } from '../../pages/publication-show';
-import { PublicationCreatePage } from '../../pages/publication-create';
-import { ConversationsShowPage } from '../../pages/conversations-show';
-import { UserEditPage } from '../../pages/user-edit';
-import { AdminPage } from '../../pages/admin';
-import { SettingsPage } from '../../pages/settings';
+import { NotFoundPage } from '@pages/not-found';
+import { ConversationsPage } from '@pages/conversations';
+import { PublicationShowPage } from '@pages/publication-show';
+import { PublicationCreatePage } from '@pages/publication-create';
+import { ConversationsShowPage } from '@pages/conversations-show';
+import { UserEditPage } from '@pages/user-edit';
+import { AdminPage } from '@pages/admin';
+import { SettingsPage } from '@pages/settings';
 
 export const router = createBrowserRouter([
     {

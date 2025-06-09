@@ -1,4 +1,4 @@
-import axiosClient from '../../../shared/api/client';
+import axiosClient from '@shared/api/client';
 import { DataProvider } from 'react-admin';
 
 export const dataProvider: DataProvider = {
