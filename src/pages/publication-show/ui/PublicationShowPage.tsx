@@ -5,6 +5,7 @@ import { BackIcon } from '@shared/assets/BackIcon';
 import { useEffect, useState } from 'react';
 import { getUser } from '@shared/api/endpoints/users';
 import { showPublication } from '@shared/api/endpoints/publications';
+import { BeatLoader } from 'react-spinners';
 
 export const PublicationShowPage = () => {
     const [user, setUser] = useState<any | null>(null);
@@ -30,7 +31,11 @@ export const PublicationShowPage = () => {
     }, [post]);
 
     if (!user) {
-        return <div>Загрузка...</div>;
+        return (
+            <div>
+                <BeatLoader />
+            </div>
+        );
     }
 
     return (

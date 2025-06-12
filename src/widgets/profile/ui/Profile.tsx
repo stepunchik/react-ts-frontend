@@ -11,6 +11,7 @@ import { CreateConversationButton } from '@features/conversation/conversation-bu
 import { Statistic } from '@widgets/statistic';
 import { EditIcon } from '@shared/assets/EditIcon';
 import { useNavigate } from 'react-router-dom';
+import { BeatLoader } from 'react-spinners';
 
 interface ProfileProps {
     userId: number;
@@ -32,7 +33,11 @@ export const Profile: React.FC<ProfileProps> = ({ userId }) => {
     }, [userId]);
 
     if (!user) {
-        return <div>Загрузка...</div>;
+        return (
+            <div>
+                <BeatLoader />
+            </div>
+        );
     }
 
     const isOwnProfile = currentUser?.id === user.id;

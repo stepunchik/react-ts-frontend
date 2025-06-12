@@ -8,6 +8,7 @@ import echo from '@app/services/echo';
 import './conversations.scss';
 import { useStateContext } from '@app/providers/ContextProvider';
 import ReactModal from 'react-modal';
+import { BeatLoader } from 'react-spinners';
 
 interface ConversationMessage {
     id: number;
@@ -176,7 +177,11 @@ export const ConversationsPage = () => {
             {conversations.length == 0 && !isLoading ? (
                 <div className="no-info">Диалогов нет.</div>
             ) : null}
-            {isLoading && <div className="loading">Загрузка...</div>}
+            {isLoading && (
+                <div className="loading">
+                    <BeatLoader />
+                </div>
+            )}
             {!isLoading &&
                 conversations.map((conversation) => (
                     <div

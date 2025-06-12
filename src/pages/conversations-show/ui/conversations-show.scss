@@ -28,11 +28,21 @@
 .messages-box {
     flex: 1;
     overflow-y: auto;
+    scrollbar-width: thin;
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 8px;
     background-color: $block-background-color;
+}
+
+.message-container {
+    display: flex;
+    align-items: center;
+
+    &.own-container {
+        justify-content: end;
+    }
 }
 
 .message {
@@ -49,13 +59,11 @@
 
     &:not(.own) {
         background-color: $white-color;
-        align-self: flex-start;
         border-bottom-left-radius: 4px;
     }
 
     &.own {
         background-color: $message-background-color;
-        align-self: flex-end;
         border-bottom-right-radius: 4px;
     }
 }
@@ -78,8 +86,7 @@
     white-space: nowrap;
 }
 
-.no-info,
-.loading {
+.no-info {
     flex: 1;
     display: flex;
     justify-content: center;
@@ -182,4 +189,9 @@
         height: 100vh;
         border-radius: 0;
     }
+}
+
+.dot-icon {
+    width: 25px;
+    height: 25px;
 }

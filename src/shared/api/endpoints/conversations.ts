@@ -12,6 +12,6 @@ export function deleteConversation(conversationId: number) {
     return DELETE(`/conversations/${conversationId}`);
 }
 
-export function getConversation(conversationId: string) {
-    return GET(`/conversations/${conversationId}`);
+export function getConversation(conversationId: string, page = 1) {
+    return GET(`/conversations/${conversationId}`, { params: { page } });
 }

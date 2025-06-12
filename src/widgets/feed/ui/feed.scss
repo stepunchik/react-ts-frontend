@@ -102,10 +102,6 @@
     color: $primary-button-color;
 }
 
-.loading {
-    background-color: inherit;
-}
-
 .no-info {
     background-color: inherit;
     font-family: $text-font;
@@ -137,4 +133,15 @@
     width: 100%;
     justify-content: space-around;
     margin-top: 10px;
+}
+
+.go-up {
+    width: 32px;
+    height: 32px;
+}
+
+.go-up:hover {
+    transform: scale(1.2);
+    transition: all 150ms ease-in-out;
+    cursor: pointer;
 }

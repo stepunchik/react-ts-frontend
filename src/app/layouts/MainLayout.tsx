@@ -8,6 +8,7 @@ import { useStateContext } from '../providers/ContextProvider';
 import './layout.scss';
 import { currentUser } from '@shared/api/endpoints/users';
 import { ForbiddenPage } from '@pages/forbidden';
+import { BeatLoader } from 'react-spinners';
 
 export const MainLayout = () => {
     const { user, token, setUser } = useStateContext();
@@ -29,7 +30,11 @@ export const MainLayout = () => {
     }, [token]);
 
     if (isLoading) {
-        return <div className="loading">Загрузка пользователя...</div>;
+        return (
+            <div className="loading">
+                <BeatLoader />
+            </div>
+        );
     }
 
     if (!token) {

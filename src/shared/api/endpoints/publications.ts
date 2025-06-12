@@ -1,7 +1,11 @@
 import { DELETE, GET, POST } from '../client';
 
-export function publications() {
-    return GET('/publications');
+export function publications(page = 1) {
+    return GET('/publications', { params: { page } });
+}
+
+export function userPublications(userId: number, page = 1) {
+    return GET(`users/${userId}/publications`, { params: { page } });
 }
 
 export function createPublication(data: FormData) {
@@ -10,10 +14,6 @@ export function createPublication(data: FormData) {
 
 export function updatePublication(data: FormData, publicationId: string) {
     return POST(`/publications/${publicationId}`, data);
-}
-
-export function userPublications(userId: number) {
-    return GET(`users/${userId}/publications`);
 }
 
 export function showPublication(publicationId: string) {

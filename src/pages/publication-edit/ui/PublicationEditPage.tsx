@@ -4,6 +4,7 @@ import { showPublication } from '@shared/api/endpoints/publications';
 import { PublicationForm } from '@features/publication-form';
 
 import './publication-edit.scss';
+import { BeatLoader } from 'react-spinners';
 
 export const PublicationEditPage = () => {
     const { id: publicationId } = useParams();
@@ -22,7 +23,11 @@ export const PublicationEditPage = () => {
     }, [location.state?.post, publicationId]);
 
     if (isLoading) {
-        return <div className="loading">Загрузка...</div>;
+        return (
+            <div className="loading">
+                <BeatLoader />
+            </div>
+        );
     }
 
     if (!post && !isLoading) {

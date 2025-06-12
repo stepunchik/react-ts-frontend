@@ -8,6 +8,7 @@ import { userEditSchema } from '../model/userEditSchema';
 import { ZodError } from 'zod';
 
 import './user-edit-form.scss';
+import { BeatLoader } from 'react-spinners';
 
 type FormErrors = Record<string, string>;
 
@@ -113,7 +114,11 @@ export const UserEditForm = () => {
 
     return (
         <div>
-            {isLoading && <div className="loading">Загрузка...</div>}
+            {isLoading && (
+                <div className="loading">
+                    <BeatLoader />
+                </div>
+            )}
             {!isLoading && (
                 <form className="user-form" onSubmit={handleSubmit}>
                     <div className="form-item user-form-item">

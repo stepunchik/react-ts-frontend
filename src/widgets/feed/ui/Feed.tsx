@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
     deletePublication,
     publications,
@@ -14,6 +14,8 @@ import './feed.scss';
 import { EditIcon } from '@shared/assets/EditIcon';
 import { TrashIcon } from '@shared/assets/TrashIcon';
 import ReactModal from 'react-modal';
+import { UpIcon } from '@shared/assets/UpIcon';
+import { BeatLoader } from 'react-spinners';
 
 interface FeedProps {
     userProfileId?: number;
@@ -26,36 +28,92 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId, searchTerm = '' }) =>
     const navigate = useNavigate();
     const { user } = useStateContext();
     const [posts, setPosts] = useState<any[]>([]);
+    const [totalPosts, setTotalPosts] = useState(0);
     const [gradedPublications, setGradedPublications] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
     const [hoveredPostId, setHoveredPostId] = useState<number | null>(null);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [publicationToDelete, setPublicationToDelete] = useState<number | null>(null);
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+
+    const fetchPublications = useCallback(
+        async (pageNum: number, isInitialLoad = false) => {
+            if (isInitialLoad) {
+                setIsLoading(true);
+            } else {
+                setIsLoadingMore(true);
+            }
+
+            try {
+                const request = userProfileId
+                    ? userPublications(userProfileId, pageNum)
+                    : publications(pageNum);
+
+                const { data } = await request;
+
+                if (isInitialLoad) {
+                    setPosts(data.publications.data);
+                    setTotalPosts(data.publications.total || 0);
+                } else {
+                    setPosts((prev) => [...prev, ...data.publications.data]);
+                }
+
+                setGradedPublications(data.gradedPublications || []);
+                setHasMore(data.publications.current_page < data.publications.last_page);
+            } catch (err) {
+                console.error('Ошибка загрузки публикаций: ', err);
+            } finally {
+                if (isInitialLoad) {
+                    setIsLoading(false);
+                } else {
+                    setIsLoadingMore(false);
+                }
+            }
+        },
+        [userProfileId]
+    );
 
     useEffect(() => {
-        getPublications();
-    }, [userProfileId]);
+        fetchPublications(1, true);
+    }, [userProfileId, fetchPublications]);
+
+    const handleOnScroll = useCallback(() => {
+        if (
+            window.innerHeight + document.documentElement.scrollTop !==
+                document.documentElement.offsetHeight ||
+            isLoading ||
+            isLoadingMore ||
+            !hasMore
+        ) {
+            return;
+        }
+
+        setPage((prev) => {
+            const newPage = prev + 1;
+            fetchPublications(newPage);
+            return newPage;
+        });
+    }, [isLoading, isLoadingMore, hasMore, fetchPublications]);
+
+    const debounce = (func: (...args: any[]) => void, wait: number) => {
+        let timeout: ReturnType<typeof setTimeout>;
+        return (...args: any[]) => {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func(...args), wait);
+        };
+    };
+
+    const debouncedHandleScroll = debounce(handleOnScroll, 100);
+
+    useEffect(() => {
+        window.addEventListener('scroll', debouncedHandleScroll);
+        return () => window.removeEventListener('scroll', debouncedHandleScroll);
+    }, [debouncedHandleScroll]);
 
     const handlePostClick = (id: number, post: any) => {
         navigate(`/publications/${id}`, { state: { post } });
-    };
-
-    const getPublications = () => {
-        setIsLoading(true);
-
-        const request = userProfileId ? userPublications(userProfileId) : publications();
-
-        request
-            .then(({ data }) => {
-                setPosts(data.publications);
-                setGradedPublications(data.gradedPublications || []);
-            })
-            .catch((err) => {
-                console.error('Ошибка загрузки публикаций: ', err);
-            })
-            .finally(() => {
-                setIsLoading(false);
-            });
     };
 
     const getUserGradeForPost = (postId: number): number | null => {
@@ -164,7 +222,11 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId, searchTerm = '' }) =>
             {!isLoading && filteredPosts.length === 0 && searchTerm && (
                 <div className="no-info">Ничего не найдено по запросу «{searchTerm}».</div>
             )}
-            {isLoading && <div className="loading">Загрузка...</div>}
+            {isLoading && (
+                <div className="loading">
+                    <BeatLoader />
+                </div>
+            )}
             {!isLoading &&
                 filteredPosts.map((post) => (
                     <div
@@ -194,32 +256,52 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId, searchTerm = '' }) =>
                         <div className="title">{post.title}</div>
                         <p className="text">{post.text}</p>
                         {post.image && <img className="image" src={post.image} alt={post.title} />}
-                        <div className="buttons-block">
-                            <LikeIcon
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleLikeClick(post.id);
-                                }}
-                                className={
-                                    getUserGradeForPost(post.id) === 1
-                                        ? 'icon-button selected'
-                                        : 'icon-button'
-                                }
-                            />
-                            <DislikeIcon
-                                onClick={(e) => {
-                                    e.stopPropagation();
-                                    handleDislikeClick(post.id);
-                                }}
-                                className={
-                                    getUserGradeForPost(post.id) === 0
-                                        ? 'icon-button selected'
-                                        : 'icon-button'
-                                }
-                            />
-                        </div>
+                        {user?.id !== post.user_id && (
+                            <div className="buttons-block">
+                                <LikeIcon
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleLikeClick(post.id);
+                                    }}
+                                    className={
+                                        getUserGradeForPost(post.id) === 1
+                                            ? 'icon-button selected'
+                                            : 'icon-button'
+                                    }
+                                />
+                                <DislikeIcon
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        handleDislikeClick(post.id);
+                                    }}
+                                    className={
+                                        getUserGradeForPost(post.id) === 0
+                                            ? 'icon-button selected'
+                                            : 'icon-button'
+                                    }
+                                />
+                            </div>
+                        )}
                     </div>
                 ))}
+
+            {isLoadingMore && (
+                <div className="loading">
+                    <BeatLoader />
+                </div>
+            )}
+            {!hasMore && posts.length > 0 && (
+                <div className="no-info">
+                    <div className="no-info">Публикаций больше нет.</div>
+                    <UpIcon
+                        className="go-up"
+                        onClick={() => {
+                            window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
+                        }}
+                    />
+                </div>
+            )}
+
             <ReactModal
                 isOpen={isModalOpen}
                 onRequestClose={() => setIsModalOpen(false)}

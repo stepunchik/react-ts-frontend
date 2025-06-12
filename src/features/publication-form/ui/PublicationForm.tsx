@@ -1,10 +1,10 @@
 import { useState, useEffect } from 'react';
-import { PublicationEditor } from '@features/publication-editor';
 import 'react-datepicker/dist/react-datepicker.css';
 import { ZodError } from 'zod';
 import { updatePublication, createPublication } from '@shared/api/endpoints/publications';
 import { useNavigate } from 'react-router-dom';
 import { publicationEditSchema } from '../model/publicationEditSchema';
+import { PublicationEditor } from './PublicationEditor';
 
 type FormErrors = Record<string, string>;
 

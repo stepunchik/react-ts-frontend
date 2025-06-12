@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 
 import './top-users.scss';
 import { lastWeekTopUsers, topUsers } from '@shared/api/endpoints/users';
+import { BeatLoader } from 'react-spinners';
 
 export const TopUsers = () => {
     const [top, setTop] = useState<any[]>([]);
@@ -37,7 +38,11 @@ export const TopUsers = () => {
         <div className="top-column">
             <div className="top">
                 <div className="top-title">Топ пользователей</div>
-                {isLoading && <div className="loading">Загрузка...</div>}
+                {isLoading && (
+                    <div className="loading">
+                        <BeatLoader />
+                    </div>
+                )}
                 {!isLoading &&
                     top.map((user) => (
                         <div key={user.id} className="top-item">
@@ -54,7 +59,11 @@ export const TopUsers = () => {
                     <div className="top-title">Топ пользователей</div>
                     <p className="top-text">за последнюю неделю</p>
                 </div>
-                {isLoading && <div className="loading">Загрузка...</div>}
+                {isLoading && (
+                    <div className="loading">
+                        <BeatLoader />
+                    </div>
+                )}
                 {!isLoading &&
                     lastWeekTop.map((user) => (
                         <div key={user.id} className="top-item">

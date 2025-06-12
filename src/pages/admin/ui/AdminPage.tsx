@@ -7,6 +7,7 @@ import { useStateContext } from '@app/providers/ContextProvider';
 import { ForbiddenPage } from '@pages/forbidden';
 import { currentUser } from '@shared/api/endpoints/users';
 import { useEffect, useState } from 'react';
+import { BeatLoader } from 'react-spinners';
 
 export const AdminPage = () => {
     const { user, token, setUser } = useStateContext();
@@ -27,7 +28,11 @@ export const AdminPage = () => {
     }, [token]);
 
     if (isLoading) {
-        return <div className="loading">Загрузка пользователя...</div>;
+        return (
+            <div className="loading">
+                <BeatLoader />
+            </div>
+        );
     }
 
     if (!user.roles?.includes('admin')) {

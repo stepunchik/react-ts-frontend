@@ -8,6 +8,8 @@ import { ru } from 'date-fns/locale';
 import TextareaAutosize from 'react-textarea-autosize';
 import './conversations-show.scss';
 import { useStateContext } from '@app/providers/ContextProvider';
+import { DotIcon } from '@shared/assets/DotIcon';
+import { BeatLoader } from 'react-spinners';
 
 interface ConversationMessage {
     id: number;
@@ -25,9 +27,14 @@ export const ConversationsShowPage = () => {
     const [isLoading, setIsLoading] = useState(false);
     const conversationName = useLocation();
     const [name, setName] = useState<string>(conversationName.state?.name);
-
+    const [hasMessages, setHasMessages] = useState(false);
     const [editingMessageId, setEditingMessageId] = useState<number | null>(null);
     const [editedText, setEditedText] = useState<string>('');
+
+    const [page, setPage] = useState(1);
+    const [hasMore, setHasMore] = useState(true);
+    const [isLoadingMore, setIsLoadingMore] = useState(false);
+    const messagesBoxRef = useRef<HTMLDivElement>(null);
 
     const [contextMenu, setContextMenu] = useState<{
         x: number;
@@ -47,9 +54,7 @@ export const ConversationsShowPage = () => {
 
     useEffect(() => {
         if (!name && conversationId) {
-            getConversation(conversationId)
-                .then((res) => setName(res.data.conversation.name))
-                .catch(() => setName('Без названия'));
+            getConversation(conversationId);
         }
     }, [name, conversationId]);
 
@@ -60,6 +65,7 @@ export const ConversationsShowPage = () => {
 
         channel.listen('.message.sent', (e: { message: ConversationMessage }) => {
             setMessages((prev) => [...prev, e.message]);
+            setHasMessages(true);
         });
 
         channel.listen('.message.updated', (e: { message: ConversationMessage }) => {
@@ -85,7 +91,15 @@ export const ConversationsShowPage = () => {
 
         getConversation(conversationId)
             .then((res) => {
-                setMessages(res.data.messages);
+                const loadedMessages = res.data.messages.data;
+                setMessages(
+                    loadedMessages.sort(
+                        (a: ConversationMessage, b: ConversationMessage) =>
+                            new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+                    )
+                );
+
+                setHasMessages(loadedMessages.length > 0);
             })
             .catch((err) => {
                 console.error('Ошибка загрузки сообщений:', err);
@@ -105,16 +119,85 @@ export const ConversationsShowPage = () => {
         setText(event.target.value);
     };
 
+    const loadMoreMessages = async () => {
+        if (!conversationId || isLoadingMore || !hasMore || !messagesBoxRef.current) return;
+
+        const box = messagesBoxRef.current;
+        const prevScrollHeight = box.scrollHeight;
+
+        setIsLoadingMore(true);
+
+        try {
+            const res = await getConversation(conversationId, page + 1);
+            const newMessages = res.data.messages.data;
+
+            setMessages((prev) =>
+                [...newMessages, ...prev].sort(
+                    (a, b) => new Date(a.created_at).getTime() - new Date(b.created_at).getTime()
+                )
+            );
+
+            setPage((prev) => prev + 1);
+
+            setHasMore(newMessages.length > 0);
+
+            setTimeout(() => {
+                const newScrollHeight = box.scrollHeight;
+                box.scrollTop = newScrollHeight - prevScrollHeight;
+            }, 100);
+        } catch (err) {
+            console.error('Ошибка при подгрузке сообщений:', err);
+        } finally {
+            setIsLoadingMore(false);
+        }
+    };
+
+    useEffect(() => {
+        const box = messagesBoxRef.current;
+        if (!box) return;
+
+        const handleScroll = () => {
+            if (box.scrollTop < 100 && hasMore && !isLoadingMore) {
+                loadMoreMessages();
+            }
+        };
+
+        box.addEventListener('scroll', handleScroll);
+        return () => box.removeEventListener('scroll', handleScroll);
+    }, [hasMore, isLoadingMore]);
+
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (!text) return;
-        await createMessage(text, conversationId)
-            .then(() => {
-                setText('');
-            })
-            .catch((err) => {
-                console.error('Ошибка отправки сообщения:', err);
-            });
+        if (!text.trim()) return;
+
+        const tempId = Date.now();
+        const optimisticMessage = {
+            id: tempId,
+            text,
+            sender_id: user!.id,
+            created_at: new Date().toISOString(),
+            is_read: false,
+        };
+
+        setMessages((prev) => [...prev, optimisticMessage]);
+        setText('');
+        setHasMessages(true);
+
+        try {
+            await createMessage(text, conversationId!);
+
+            setMessages((prev) => prev.filter((msg) => msg.id !== tempId));
+
+            setTimeout(() => {
+                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+            }, 100);
+        } catch (err) {
+            setMessages((prev) => prev.filter((msg) => msg.id !== tempId));
+            if (messages.length === 0) {
+                setHasMessages(false);
+            }
+            console.error('Ошибка отправки:', err);
+        }
     };
 
     function formatDate(dateString: string): string {
@@ -177,31 +260,49 @@ export const ConversationsShowPage = () => {
         <div>
             <div className="conversation-container">
                 <div className="title conversation-title">{name}</div>
-                {!isLoading && messages.length == 0 ? (
-                    <div className="no-info">Сообщений нет.</div>
-                ) : null}
-                {isLoading && <div className="loading">Загрузка...</div>}
-                <div className="messages-box">
+                {!isLoading && !hasMessages ? <div className="no-info">Сообщений нет.</div> : null}
+                {isLoading && (
+                    <div className="loading">
+                        <BeatLoader />
+                    </div>
+                )}
+                <div className="messages-box" ref={messagesBoxRef}>
+                    {isLoadingMore && (
+                        <div className="loading">
+                            <BeatLoader />
+                        </div>
+                    )}
                     {!isLoading &&
                         messages.map((message) => (
                             <div
                                 key={message.id}
-                                className={`message ${message.sender_id === user?.id ? 'own' : ''}`}
-                                onContextMenu={(e) => handleRightClick(e, message)}>
-                                {editingMessageId === message.id ? (
-                                    <input
-                                        className="edit-input"
-                                        type="text"
-                                        value={editedText}
-                                        onChange={(e) => setEditedText(e.target.value)}
-                                        onKeyDown={(e) => handleEditKeyDown(e, message.id)}
-                                        autoFocus
-                                        onBlur={() => setEditingMessageId(null)}
-                                    />
-                                ) : (
-                                    <p className="text">{message.text}</p>
-                                )}
-                                <div className="created-at">{formatDate(message.created_at)}</div>
+                                className={`message-container ${
+                                    message.sender_id === user?.id ? 'own-container' : ''
+                                }`}>
+                                {!message.is_read && <DotIcon className="dot-icon" />}
+
+                                <div
+                                    className={`message ${
+                                        message.sender_id === user?.id ? 'own' : ''
+                                    }`}
+                                    onContextMenu={(e) => handleRightClick(e, message)}>
+                                    {editingMessageId === message.id ? (
+                                        <input
+                                            className="edit-input"
+                                            type="text"
+                                            value={editedText}
+                                            onChange={(e) => setEditedText(e.target.value)}
+                                            onKeyDown={(e) => handleEditKeyDown(e, message.id)}
+                                            autoFocus
+                                            onBlur={() => setEditingMessageId(null)}
+                                        />
+                                    ) : (
+                                        <p className="text">{message.text}</p>
+                                    )}
+                                    <div className="created-at">
+                                        {formatDate(message.created_at)}
+                                    </div>
+                                </div>
                             </div>
                         ))}
                     <div ref={messagesEndRef} />
