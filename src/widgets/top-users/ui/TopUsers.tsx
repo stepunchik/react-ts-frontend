@@ -4,8 +4,10 @@ import { useEffect, useState } from 'react';
 import './top-users.scss';
 import { lastWeekTopUsers, topUsers } from '@shared/api/endpoints/users';
 import { BeatLoader } from 'react-spinners';
+import { useStateContext } from '@app/providers/ContextProvider';
 
 export const TopUsers = () => {
+    const { user: currentUser } = useStateContext();
     const [top, setTop] = useState<any[]>([]);
     const [lastWeekTop, setLastWeekTop] = useState<any[]>([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -47,7 +49,13 @@ export const TopUsers = () => {
                     top.map((user) => (
                         <div key={user.id} className="top-item">
                             <img className="top-image" src={user.image} alt={user.name} />
-                            <Link className="username top-username" to={`/users/${user.id}`}>
+                            <Link
+                                className={
+                                    currentUser.id === user.id
+                                        ? 'username top-username own-top-place'
+                                        : 'username top-username'
+                                }
+                                to={`/users/${user.id}`}>
                                 {user.name}
                             </Link>
                             <div className="user-rating">👍 {user.total_likes}</div>
@@ -68,7 +76,13 @@ export const TopUsers = () => {
                     lastWeekTop.map((user) => (
                         <div key={user.id} className="top-item">
                             <img className="top-image" src={user.image} alt={user.name} />
-                            <Link className="username top-username" to={`/users/${user.id}`}>
+                            <Link
+                                className={
+                                    currentUser.id === user.id
+                                        ? 'username top-username own-top-place'
+                                        : 'username top-username'
+                                }
+                                to={`/users/${user.id}`}>
                                 {user.name}
                             </Link>
                             <div className="user-rating">👍 {user.total_likes}</div>

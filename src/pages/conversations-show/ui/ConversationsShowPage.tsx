@@ -80,6 +80,16 @@ export const ConversationsShowPage = () => {
             setMessages((prev) => prev.filter((msg) => msg.id !== e.messageId));
         });
 
+        channel.listen('.messages.read', (e: { conversationId: number; messageIds: number[] }) => {
+            if (e.conversationId.toString() === conversationId) {
+                setMessages((prev) =>
+                    prev.map((msg) =>
+                        e.messageIds.includes(msg.id) ? { ...msg, is_read: true } : msg
+                    )
+                );
+            }
+        });
+
         return () => {
             echo.leave(`conversation.${conversationId}`);
         };
@@ -168,36 +178,18 @@ export const ConversationsShowPage = () => {
 
     const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
         event.preventDefault();
-        if (!text.trim()) return;
-
-        const tempId = Date.now();
-        const optimisticMessage = {
-            id: tempId,
-            text,
-            sender_id: user!.id,
-            created_at: new Date().toISOString(),
-            is_read: false,
-        };
-
-        setMessages((prev) => [...prev, optimisticMessage]);
-        setText('');
-        setHasMessages(true);
-
-        try {
-            await createMessage(text, conversationId!);
-
-            setMessages((prev) => prev.filter((msg) => msg.id !== tempId));
-
-            setTimeout(() => {
-                messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
-            }, 100);
-        } catch (err) {
-            setMessages((prev) => prev.filter((msg) => msg.id !== tempId));
-            if (messages.length === 0) {
-                setHasMessages(false);
-            }
-            console.error('Ошибка отправки:', err);
-        }
+        if (!text) return;
+        await createMessage(text, conversationId)
+            .then((res) => {
+                setText('');
+                setHasMessages(true);
+            })
+            .catch((err) => {
+                if (messages.length === 0) {
+                    setHasMessages(false);
+                }
+                console.error('Ошибка отправки сообщения:', err);
+            });
     };
 
     function formatDate(dateString: string): string {
@@ -279,7 +271,9 @@ export const ConversationsShowPage = () => {
                                 className={`message-container ${
                                     message.sender_id === user?.id ? 'own-container' : ''
                                 }`}>
-                                {!message.is_read && <DotIcon className="dot-icon" />}
+                                {!message.is_read && message.sender_id === user?.id ? (
+                                    <DotIcon className="dot-icon" />
+                                ) : null}
 
                                 <div
                                     className={`message ${

@@ -4,8 +4,8 @@ export function getConversations() {
     return GET('/conversations');
 }
 
-export function createConversation(name: string, second_user: number) {
-    return POST('/conversations', { name, second_user });
+export function createConversation(second_user: number) {
+    return POST('/conversations', { second_user });
 }
 
 export function deleteConversation(conversationId: number) {

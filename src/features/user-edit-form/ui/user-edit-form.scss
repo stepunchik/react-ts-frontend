@@ -19,7 +19,7 @@
     flex-direction: row;
     align-items: center;
     justify-content: space-between;
-    width: 100%;
+    width: 37.9dvw;
 }
 
 .image-form-item input {
@@ -98,6 +98,11 @@
 }
 
 .user-edit-image {
-    width: 100%;
+    border-radius: 50%;
+    width: 180px;
+    height: 180px;
+    flex-shrink: 0;
+    flex-grow: 0;
+    object-fit: cover;
     margin-top: 10px;
 }

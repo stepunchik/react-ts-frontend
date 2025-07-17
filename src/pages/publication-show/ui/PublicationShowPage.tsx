@@ -1,4 +1,4 @@
-import { useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Link, useLocation, useNavigate, useParams } from 'react-router-dom';
 
 import './publication-show.scss';
 import { BackIcon } from '@shared/assets/BackIcon';
@@ -44,7 +44,9 @@ export const PublicationShowPage = () => {
                 <div className="back-button" onClick={() => navigate(-1)}>
                     <BackIcon className="back-icon" />
                 </div>
-                <div className="username">{user.name}</div>
+                <Link to={`/users/${user.id}`} className="username">
+                    {user.name}
+                </Link>
             </div>
             <div className="title">{post.title}</div>
             <p className="show-text">{post.text}</p>

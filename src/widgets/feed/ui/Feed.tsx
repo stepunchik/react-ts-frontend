@@ -56,11 +56,21 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId, searchTerm = '' }) =>
                 if (isInitialLoad) {
                     setPosts(data.publications.data);
                     setTotalPosts(data.publications.total || 0);
+                    setGradedPublications(data.gradedPublications || []);
                 } else {
                     setPosts((prev) => [...prev, ...data.publications.data]);
+                    setGradedPublications((prev) => [
+                        ...prev,
+                        ...(data.gradedPublications?.filter(
+                            (newGrade: any) =>
+                                !prev.some(
+                                    (prevGrade) =>
+                                        prevGrade.publication_id === newGrade.publication_id
+                                )
+                        ) || []),
+                    ]);
                 }
 
-                setGradedPublications(data.gradedPublications || []);
                 setHasMore(data.publications.current_page < data.publications.last_page);
             } catch (err) {
                 console.error('Ошибка загрузки публикаций: ', err);
@@ -254,7 +264,7 @@ export const Feed: React.FC<FeedProps> = ({ userProfileId, searchTerm = '' }) =>
                             </div>
                         )}
                         <div className="title">{post.title}</div>
-                        <p className="text">{post.text}</p>
+                        <p className="publication-text">{post.text}</p>
                         {post.image && <img className="image" src={post.image} alt={post.title} />}
                         {user?.id !== post.user_id && (
                             <div className="buttons-block">

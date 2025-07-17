@@ -10,7 +10,7 @@ import { getUser } from '@shared/api/endpoints/users';
 import { CreateConversationButton } from '@features/conversation/conversation-button';
 import { Statistic } from '@widgets/statistic';
 import { EditIcon } from '@shared/assets/EditIcon';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { BeatLoader } from 'react-spinners';
 
 interface ProfileProps {
@@ -18,6 +18,7 @@ interface ProfileProps {
 }
 
 export const Profile: React.FC<ProfileProps> = ({ userId }) => {
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const [user, setUser] = useState<any | null>(null);
     const [likesQuantity, setLikesQunatity] = useState(0);
     const [publicationsQuantity, setPublicationsQuantity] = useState(0);
@@ -94,7 +95,7 @@ export const Profile: React.FC<ProfileProps> = ({ userId }) => {
                     </div>
                 </div>
                 <div className="posts-block">
-                    <Feed userProfileId={userId} />
+                    <Feed userProfileId={userId} searchTerm={searchTerm} />
                 </div>
                 <Statistic
                     likesQuantity={likesQuantity}

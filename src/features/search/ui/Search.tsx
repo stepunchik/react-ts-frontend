@@ -10,7 +10,7 @@ export const Search: React.FC<SearchProps> = ({ value, onChange }) => {
         <input
             type="text"
             className="search-field"
-            placeholder="Поиск по публикациям..."
+            placeholder="Поиск"
             value={value}
             onChange={(e) => onChange(e.target.value)}
         />

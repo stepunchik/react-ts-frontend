@@ -20,8 +20,8 @@ export const CreateConversationButton: React.FC<CreateConversationButtonProps> =
         if (!token) return;
 
         try {
-            await createConversation(name, second_user).then((res) => {
-                navigate(`/conversations/${res.data.id}`);
+            await createConversation(second_user).then((res) => {
+                navigate(`/conversations/${res.data.id}`, { state: { name } });
             });
         } catch (error) {
             console.error(error);

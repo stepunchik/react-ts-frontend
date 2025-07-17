@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useOutletContext } from 'react-router-dom';
 import { deleteConversation, getConversations } from '@shared/api/endpoints/conversations';
 import { format, isToday, isYesterday, parseISO } from 'date-fns';
 import { ru } from 'date-fns/locale';
@@ -20,6 +20,7 @@ interface ConversationMessage {
 }
 
 export const ConversationsPage = () => {
+    const { searchTerm } = useOutletContext<{ searchTerm: string }>();
     const { user: currentUser } = useStateContext();
     const navigate = useNavigate();
     const [conversations, setConversations] = useState<any[]>([]);
@@ -172,18 +173,35 @@ export const ConversationsPage = () => {
             });
     };
 
+    const filteredConversations = conversations.filter((conversation) => {
+        const userName =
+            conversation.first_user.id !== currentUser.id
+                ? conversation.first_user.name
+                : conversation.second_user.name;
+
+        const lastMessageText = conversation.latest_message?.text || '';
+
+        return (
+            userName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+            lastMessageText.toLowerCase().includes(searchTerm.toLowerCase())
+        );
+    });
+
     return (
         <div className="conversations-list">
             {conversations.length == 0 && !isLoading ? (
                 <div className="no-info">Диалогов нет.</div>
             ) : null}
+            {!isLoading && filteredConversations.length === 0 && searchTerm && (
+                <div className="no-info">Ничего не найдено по запросу «{searchTerm}».</div>
+            )}
             {isLoading && (
                 <div className="loading">
                     <BeatLoader />
                 </div>
             )}
             {!isLoading &&
-                conversations.map((conversation) => (
+                filteredConversations.map((conversation) => (
                     <div
                         key={conversation.id}
                         className="conversation-block"

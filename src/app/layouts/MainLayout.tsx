@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Outlet } from 'react-router-dom';
+import { Outlet, useLocation } from 'react-router-dom';
 import { GuestLayout } from './GuestLayout';
 import { Sidebar } from '@widgets/sidebar';
 import { Header } from '@widgets/header';
@@ -14,6 +14,11 @@ export const MainLayout = () => {
     const { user, token, setUser } = useStateContext();
     const [searchTerm, setSearchTerm] = useState('');
     const [isLoading, setIsLoading] = useState(true);
+    const location = useLocation();
+
+    useEffect(() => {
+        setSearchTerm('');
+    }, [location.pathname]);
 
     useEffect(() => {
         if (token) {
